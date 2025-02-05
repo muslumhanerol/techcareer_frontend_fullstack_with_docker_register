@@ -129,36 +129,36 @@ $(document).ready(function () {
                     }); //end put Ajax
                 }); //end submit
         } else {
-            console.error(`${id} nolu Blog silinmedi`);
-            //alert(`${id} nolu user silinmedi`)
+            console.error(`${id} nolu User güncelleme`);
+            //alert(`${id} nolu user güncelleme`)
         } //end else
     }); //end Güncelleme
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Blog Silme
     // confirm
-    $("#blog-table tbody").on("click", ".delete-btn", function () {
+    $("#register-table tbody").on("click", ".delete-btn", function () {
         //alert("silme");
 
         // İlgili satırdaki id almak için
         const id = $(this).closest("tr").data("id");
 
         // Onay Mesajı
-        const confirmation = confirm(`${id} nolu Blog'u Silmek İstiyor musunuz ?`);
+        const confirmation = confirm(`${id} nolu User'ı Silmek İstiyor musunuz ?`);
 
         // Eğer onayımızı evetse
         if (confirmation) {
             // Silme (Ajax)
             $.ajax({
-                url: `/blog/${id}`, method: "DELETE", success: function () {
+                url: `/register/${id}`, method: "DELETE", success: function () {
                     // Silme işleminden sonrası için listeyi tazele
-                    blogList();
+                    registerList();
                 }, error: function (xhr, status, error) {
                     console.log("Silme işlemi başarısız:", error);
                 },
             });
         } else {
-            console.error(`${id} nolu Blog silinmedi`);
+            console.error(`${id} nolu User silinmedi`);
         }
     }); //end Silmek
 }); //end Document.Ready
