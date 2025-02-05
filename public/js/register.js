@@ -17,25 +17,22 @@ $(document).ready(function () {
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Blog List
-    function blogList() {
+    // Register List
+    function registerList() {
         $.ajax({
-            url: "/blog", method: "GET", success: function (data) {
+            url: "/register", method: "GET", success: function (data) {
+                // /register = register.ejs deki formun action adı. Forma tıkladındığında burada handler edilecek.
+                $("#register-table tbody").empty();
                 // blogList function içerik listesini temizlemek için kullandım.
-                $("#blog-table tbody").empty();
 
-                // forEach
+                // forEach. data= Yukarıdan gelen data.
                 data.forEach(function (item) {
-                    $("#blog-table tbody").append(`
-                <tr data-id="${item._id}">
+                    $("#register-table tbody").append(` 
+                <tr data-id="${item._id}"> 
                     <td>${item._id}</td>
-                    <td>${item.header}</td>
-                    <td>${item.content}</td>
-                    <td>${item.author}</td>
-                    <td>${item.tags}</td>
-                    <td>${item.views}</td>
-                    <td>${item.status}</td>
-                    <td>${item.dateInformation}</td>
+                    <td>${item.username}</td>
+                    <td>${item.password}</td>
+                    <td>${item.email}</td>                    
                     <td>
                         <button class="btn btn-primary edit-btn"><i class="fa-solid fa-wrench"></i></button>
                         <button class="btn btn-danger delete-btn"><i class="fa-solid fa-trash"></i></button>
@@ -45,53 +42,56 @@ $(document).ready(function () {
                 }); //end for each item
             }, //end success
         }); //end ajax
-    } //end blogList
+    } //end registerList
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Liste Function çağırmak
-    blogList();
+    registerList();
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // blog Ekleme
-    $("#blog-form").on("submit", function (event) {
-        // Browser'a otomatik olarak herhangi bir veri göndermesini kısıtkadım.
+    // on= submit işlemlerini yapabilmek için bu özelliği kullandım.
+    $("#register-form").on("submit", function (event) {
+        // Browser'a otomatik olarak herhangi bir veri göndermesini kısıtladım.
         // DİKKATTTTT : Bunu kapatmazsam csrf çalışmıyordu
         event.preventDefault();
 
         // Blog Form'da verileri almak için
-        const blogDataCreate = {
+        const registerDataCreate = {
             // Blog Form'da verileri almak için
-            header: $("#header").val(),
-            content: $("#content").val(),
-            author: $("#author").val(),
-            tags: $("#tags").val(),
-            _csrf: $("input[name='_csrf']").val(), // CSRF token'ı AJAX isteğine dahil ediyoruz
+            username: $("#username").val(),
+            password: $("#password").val(),
+            email: $("#email").val(),
+            _csrf: $("input[name='_csrf']").val(), // CSRF token'ı AJAX isteğine dahil ediyorum
+            //cors hatası almamak için şimdiden ekledim.
         };
 
-        console.warn("sonuç:" + blogDataCreate._csrf); // csrf ekle
+        console.warn("sonuç:" + registerDataCreate._csrf); // csrf ekle
 
         // Aldığım verileri kaydetmek (AJAX)
         $.ajax({
-            url: "/blog", method: "POST", data: blogDataCreate, success: function (data) {
-                // Ekledikten sonraki işlem için listeyi tazele
+            url: "/register", method: "POST", data: registerDataCreate, success: function (data) {
+                //blogList(); = Ekledikten sonraki işlem için listeyi tazele
                 blogList();
                 // Formu temizlemek için
                 // 1.YOL
-                $("#blog-form")[0].reset();
+                $("#register-form")[0].reset();
                 // 2.YOL
                 //reset()
             }, //end success
+            //Hataları yakalamak için yazdım.
             error: function (xhr, status, error) {
-                console.error("Blog Ekleme işlemi başarısız:", error); // Hata mesajını göster
+                console.error("User Ekleme işlemi başarısız:", error); // Hata mesajını göster
             },
         }); //end submit ajax
     }); // end Blog Add submit
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Blog Güncelleme
-    $("#blog-table tbody").on("click", ".edit-btn", function () {
+    //Güncellemeyi table yapısı üzerinden yapacağız. .edit-btn 37.str
+    $("#register-table tbody").on("click", ".edit-btn", function () {
         //alert("güncelleme");
-        const row = $(this).closest("tr");
+        const row = $(this).closest("tr"); //tablerow da hangisine tıklandıysa.
         const id = row.data("id");
 
         // Onay Mesajı
@@ -99,31 +99,30 @@ $(document).ready(function () {
 
         // Eğer onayımızı evetse
         if (confirmation) {
-            const header = row.find("td:eq(1)").text(); // header ikinci sütunda
-            const content = row.find("td:eq(2)").text(); // content üçüncü sütunda
-            const author = row.find("td:eq(3)").text(); // author dördüncü sütunda
-            const tags = row.find("td:eq(4)").text(); // author dördüncü sütunda
+            // row içerisinde find diyerek buldum, td deki eşitse 1 e.
+            const username = row.find("td:eq(1)").text(); // username ikinci sütunda
+            const password = row.find("td:eq(2)").text(); // password üçüncü sütunda
+            const email = row.find("td:eq(3)").text(); // email dördüncü sütunda
 
-            $("#header").val(header);
-            $("#content").val(content);
-            $("#author").val(author);
-            $("#tags").val(tags);
+            // içlerini set et dedim.
+            $("#username").val(username);
+            $("#password").val(password);
+            $("#email").val(email);
 
-            $("#blog-form")
-                .off("submit")
+            $("#register-form")
+                .off("submit") //submite tıklandıktan sonra function çalışacak.
                 .on("submit", function (event) {
                     event.preventDefault();
-                    const blogData = {
-                        header: $("#header").val(),
-                        content: $("#content").val(),
-                        author: $("#author").val(),
-                        tags: $("#tags").val(),
+                    const registerData = {
+                        username: $("#username").val(),
+                        password: $("#password").val(),
+                        email: $("#email").val(),
                     };
 
                     $.ajax({
-                        url: `/blog/${id}`, method: "PUT", data: blogData, success: function () {
-                            blogList();
-                            $("#blog-form")[0].reset();
+                        url: `/register/${id}`, method: "PUT", data: registerData, success: function () {
+                            blogList(); //Güncelleme sonrası halini göster.
+                            $("#register-form")[0].reset();
                         }, error: function (xhr, status, error) {
                             console.log("Güncelleme işlemi başarısız:", error);
                         },
@@ -131,6 +130,7 @@ $(document).ready(function () {
                 }); //end submit
         } else {
             console.error(`${id} nolu Blog silinmedi`);
+            //alert(`${id} nolu user silinmedi`)
         } //end else
     }); //end Güncelleme
 
