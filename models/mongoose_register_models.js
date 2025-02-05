@@ -26,16 +26,15 @@ const RegisterPostSchema = new mongoose.Schema({
     },
 
     // EMAIL
-    email: String,
 
-    // EMAIL (Dizi)
-    // Etiketler (alanı için en az bir etiket zorunluluğu getirildi.)
-    // Email (Etiketler): Blog gönderilerine etiketler ekleyerek onları kategorize edebilir ve aramalarda bu etiketleri kullanabilirsiniz.
     email: {
-        type: [String], validate: function (v) {
-            return Array.isArray(v) && v.length > 0;
-        }, message: "En az bir etiket girmelisiniz",
+        type: String,
+        required: [true, " Email içeriği için gereklidir"],
+        trim: true,
+        minleght: [5, "Email başlığı için minumum 5 karakter olmalıdır."],
     },
+
+
 
     // // DATE
     // dateInformation: {

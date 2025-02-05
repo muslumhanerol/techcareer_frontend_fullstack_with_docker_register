@@ -75,26 +75,26 @@ router.post("/", async (request, response) => {
 }); //end create => post
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-// LIST BLOG
+// LIST REGİSTER
 // GET isteği ile mongodb üzerinden bütün verileri alacağız.
-// http://localhost:1111
+// http://localhost:1112
 router.get("/", async (request, response) => {
     try {
         // MongoDB üzerinden get isteği attık
-        const find = await MongooseBlogModelApi.find();
+        const find = await MongooseRegisterModelApi.find();
 
         // Tarihi Bizim istediğimiz şekilde yazalım.
-        const formattedDateTurkish = await Promise.all(find.map(async (temp) => {
-            // Görüntüleme sayısını artırma
-            await temp.incrementViews();
+        // const formattedDateTurkish = await Promise.all(find.map(async (temp) => {
+        //     // Görüntüleme sayısını artırma
+        //     await temp.incrementViews();
 
-            return {
-                ...temp._doc, // Tüm blog verilerini kopyala
-                dateInformation: new Date(temp.createdAt).toLocaleString("tr-TR", {
-                    year: "numeric", month: "long", day: "numeric", year: "numeric", hour: "2-digit", second: "2-digit",
-                }), //end createdAt
-            }; //end return
-        })); //end formattedDateTurkish
+        //     return {
+        //         ...temp._doc, // Tüm blog verilerini kopyala
+        //         dateInformation: new Date(temp.createdAt).toLocaleString("tr-TR", {
+        //             year: "numeric", month: "long", day: "numeric", year: "numeric", hour: "2-digit", second: "2-digit",
+        //         }), //end createdAt
+        //     }; //end return
+        // })); //end formattedDateTurkish
 
         // Her blog sayfasına bakıldıkça sayacçı 1 artır
         // const viewCounter = await Promise.all(
@@ -105,7 +105,7 @@ router.get("/", async (request, response) => {
         // ); //end viewCounter
         // Dönüş değeri
 
-        response.status(200).json(formattedDateTurkish);
+        // response.status(200).json(formattedDateTurkish);
 
         // Listeleme başarılı
         console.log("Listeleme Başarılı");
@@ -121,7 +121,7 @@ router.get("/", async (request, response) => {
 router.put("/:id", async (request, response) => {
     try {
         // MongoDB üzerinden id ile istek attık
-        const update = await MongooseBlogModelApi.findByIdAndUpdate(// ID almak
+        const update = await MongooseRegisterModelApi.findByIdAndUpdate(// ID almak
             request.params.id, request.body, { new: true }); //end update
 
         // Dönüş değeri
@@ -145,7 +145,7 @@ router.delete("/:id", async (request, response) => {
         const id = request.params.id;
         console.log(id);
 
-        const deleteFindId = await MongooseBlogModelApi.findByIdAndDelete(id);
+        const deleteFindId = await MongooseRegisterModelApi.findByIdAndDelete(id);
         console.log(deleteFindId);
 
         // Dönüş değeri
@@ -160,15 +160,15 @@ router.delete("/:id", async (request, response) => {
 
 /////////////////////////////////////////////////////////////
 // EXPORT
+//router bağımlı hal getirildi.
 module.exports = router;
 
 /////////////////////////////////////////////////////////////
 // POSTMAN, cURL api test araçlarından bir tanesini kullanabilirsiniz.
 /*
 {
-    "header": "başlık",
-    "content": "başlık",
-    "author": "Hamit Mızrak",
-    "tags": "node",
+    "usrname": "başlık",
+    "password": "başlık",
+    "email": "Muslum Han Erol"    
 }
 */

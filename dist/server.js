@@ -139,6 +139,7 @@ const limiter = rateLimit({
     message: "İstek sayısı fazla yapıldı, lütfen biraz sonra tekrar deneyiniz",
 });
 app.use("/blog/", limiter);
+app.use("/register/", limiter);
 // CORS
 // npm install cors
 // CORS (Cross-Origin Resource Sharing)
@@ -230,6 +231,41 @@ app.post("/", csrfProtection, (request, response) => {
         response.status(500).send("Veritabanı hatası oluştu.");
     });
 });
+//Güvenlik İçin  REGISTER
+app.post("/", csrfProtection, (request, response) => {
+    const registerData = {
+        username: request.body.username,
+        password: request.body.password,
+        email: request.body.email,
+    };
+    if (!registerData.username || !registerData.password) {
+        return response.status(400).send("Register verisi eksik!");
+    }
+    if (!request.body) {
+        console.log("Boş gövde alındı.");
+        logger.info("Boş gövde alındı."); //logger: Winston
+    }
+    else {
+        console.log(request.body);
+        console.log("Dolu gövde alındı.");
+        logger.info(request.body); //logger: Winston
+        logger.info("Dolu gövde alındı."); //logger: Winston
+    }
+    const RegisterModel = require("./models/mongoose_register_models"); // Modeli ekleyin
+    const newRegister = new RegisterModel(registerData);
+    newRegister
+        .save()
+        .then(() => {
+        console.log("Blog başarıyla kaydedildi:", registerData);
+        logger.info("Blog başarıyla kaydedildi:", registerData); //logger: Winston
+        response.send("CSRF ile blog başarıyla kaydedildi.");
+    })
+        .catch((err) => {
+        console.log("Veritabanı hatası:", err);
+        logger.error("Veritabanı hatası:", err); //logger: Winston
+        response.status(500).send("Veritabanı hatası oluştu.");
+    });
+});
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // STATIC (Ts için public dizini oluşturduk)
@@ -248,9 +284,12 @@ app.set("view engine", "ejs");
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Router (Rotalar)
 const blogRoutes = require("../routes/blog_api_routes");
+const registerRoutes = require("../routes/register_api_routes");
 const { request } = require("http");
 // http://localhost:1111/blog
 app.use("/blog", blogRoutes);
+// http://localhost:1111/register
+app.use("/register", registerRoutes);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 404 Hata sayfası

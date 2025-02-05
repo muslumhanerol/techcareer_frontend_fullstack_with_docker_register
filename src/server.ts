@@ -107,7 +107,7 @@ mongoose
   .then(() => {
     console.log("Mongo DB Başarıyla Yüklendi");
   })
-  .catch((err:any) => {
+  .catch((err: any) => {
     console.error("Mongo DB Bağlantı Hatası", err);
   });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -168,12 +168,16 @@ app.use(morgan("combined")); //dev: uzun ve renkli loglar göster
 // Her 15 dakika içinde en fazla 100 istek atılabilinir.
 const rateLimit = require("express-rate-limit");
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 dakika
-    max: 100, // buy süre zarfında en fazla bu kadar isterk atabilirsiniz.
-    message: "İstek sayısı fazla yapıldı, lütfen biraz sonra tekrar deneyiniz",
+  windowMs: 15 * 60 * 1000, // 15 dakika
+  max: 100, // buy süre zarfında en fazla bu kadar isterk atabilirsiniz.
+  message: "İstek sayısı fazla yapıldı, lütfen biraz sonra tekrar deneyiniz",
 });
 
 app.use("/blog/", limiter);
+
+
+app.use("/register/", limiter);
+
 
 // CORS
 // npm install cors
@@ -206,88 +210,130 @@ Kullanıcı browser üzerinden oturum açtığında ve kimlik doğrulama bilgile
 // npm install cookie-parser
 
 // Formu render eden rota ("/")
-app.get("/", csrfProtection, (request:any, response:any) => {
-    // İstek gövdesinde JSON(Javascript Object Notation) formatında veri göndereceğini belirtir.
-    //response.setHeader("Content-Type", "application/json");
-    //response.setHeader("Content-Type", "text/plain"); // name Hamit surnameMızrak
-    response.setHeader("Content-Type", "text/html");
-    //response.setHeader("Content-Type", "application/x-www-form-urlencoded"); // name=Hamit&surname=Mizrak
+app.get("/", csrfProtection, (request: any, response: any) => {
+  // İstek gövdesinde JSON(Javascript Object Notation) formatında veri göndereceğini belirtir.
+  //response.setHeader("Content-Type", "application/json");
+  //response.setHeader("Content-Type", "text/plain"); // name Hamit surnameMızrak
+  response.setHeader("Content-Type", "text/html");
+  //response.setHeader("Content-Type", "application/x-www-form-urlencoded"); // name=Hamit&surname=Mizrak
 
-    // cache-control: Yanıtları hızlı sunmak için ve sunucya gereksiz istekleri azaltmak için
-    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+  // cache-control: Yanıtları hızlı sunmak için ve sunucya gereksiz istekleri azaltmak için
+  response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 
-    // Sitemizi başka sitelerde iframe ile açılmasını engellemek
-    // clickjacking saldırılarına karşı korumayı sağlar
-    response.setHeader("X-Frame-Options", "DENY");
+  // Sitemizi başka sitelerde iframe ile açılmasını engellemek
+  // clickjacking saldırılarına karşı korumayı sağlar
+  response.setHeader("X-Frame-Options", "DENY");
 
-    // X-XSS-Protection: Tarayıca tarafından XSS(Cross-Site Scripting) saldırılarıa karşı koruma
-    // XSS saldırısını tespit ederse sayfanın yüklenmesini engeller.
-    response.setHeader("X-XSS-Protection", "1; mode=block");
+  // X-XSS-Protection: Tarayıca tarafından XSS(Cross-Site Scripting) saldırılarıa karşı koruma
+  // XSS saldırısını tespit ederse sayfanın yüklenmesini engeller.
+  response.setHeader("X-XSS-Protection", "1; mode=block");
 
-    // Access Control (CORS Başlıkları)
-    // XBaşka bir kaynaktan gelen istekleri kontrol etmet için CORS başlığı ekleyebiliriz.
-    response.setHeader("Access-Control-Allow-Origin", "https://example.com");
+  // Access Control (CORS Başlıkları)
+  // XBaşka bir kaynaktan gelen istekleri kontrol etmet için CORS başlığı ekleyebiliriz.
+  response.setHeader("Access-Control-Allow-Origin", "https://example.com");
 
-    // Access-Control-Allow-Methods
-    // Sunucunun hangi HTTP yöntemlerini kabul etiğini gösterir.
-    response.setHeader(
-        "Access-Control-Allow-Methods",
-        "GET, POST, PUT, PATCH, DELETE, OPTIONS"
-    );
+  // Access-Control-Allow-Methods
+  // Sunucunun hangi HTTP yöntemlerini kabul etiğini gösterir.
+  response.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+  );
 
-    // Access-Control-Allow-Headers
-    // Bu başlıklar, taryıcınının sunucuya göndereceği özel başlıklar göndersin
-    response.setHeader(
-        "Access-Control-Allow-Headers",
-        "Content-Type, Authorization"
-    );
+  // Access-Control-Allow-Headers
+  // Bu başlıklar, taryıcınının sunucuya göndereceği özel başlıklar göndersin
+  response.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization"
+  );
 
-    // dist/server.js
-    response.render("blog", { csrfToken: request.csrfToken() });
+  // dist/server.js
+  response.render("blog", { csrfToken: request.csrfToken() });
 });
 
 // Form verilerini işleyen rota
 // DİKKATT: Eğer  blog_api_routes.js post kısmında event.preventDefault(); kapatırsam buraki kodlar çalışır.
 // blog için CSRF koruması eklenmiş POST işlemi
 // app.post("/blog", csrfProtection, (request, response) => {
-app.post("/", csrfProtection, (request:any, response:any) => {
-    const blogData = {
-        header: request.body.header,
-        content: request.body.content,
-        author: request.body.author,
-        tags: request.body.tags,
-    };
+app.post("/", csrfProtection, (request: any, response: any) => {
+  const blogData = {
+    header: request.body.header,
+    content: request.body.content,
+    author: request.body.author,
+    tags: request.body.tags,
+  };
 
-    if (!blogData.header || !blogData.content) {
-        return response.status(400).send("Blog verisi eksik!");
-    }
+  if (!blogData.header || !blogData.content) {
+    return response.status(400).send("Blog verisi eksik!");
+  }
 
-    if (!request.body) {
-        console.log("Boş gövde alındı.");
-        logger.info("Boş gövde alındı."); //logger: Winston
-    } else {
-        console.log(request.body);
-        console.log("Dolu gövde alındı.");
+  if (!request.body) {
+    console.log("Boş gövde alındı.");
+    logger.info("Boş gövde alındı."); //logger: Winston
+  } else {
+    console.log(request.body);
+    console.log("Dolu gövde alındı.");
 
-        logger.info(request.body); //logger: Winston
-        logger.info("Dolu gövde alındı."); //logger: Winston
-    }
+    logger.info(request.body); //logger: Winston
+    logger.info("Dolu gövde alındı."); //logger: Winston
+  }
 
-    const BlogModel = require("./models/mongoose_blog_models"); // Modeli ekleyin
+  const BlogModel = require("./models/mongoose_blog_models"); // Modeli ekleyin
 
-    const newBlog = new BlogModel(blogData);
-    newBlog
-        .save()
-        .then(() => {
-            console.log("Blog başarıyla kaydedildi:", blogData);
-            logger.info("Blog başarıyla kaydedildi:", blogData); //logger: Winston
-            response.send("CSRF ile blog başarıyla kaydedildi.");
-        })
-        .catch((err:any) => {
-            console.log("Veritabanı hatası:", err);
-            logger.error("Veritabanı hatası:", err); //logger: Winston
-            response.status(500).send("Veritabanı hatası oluştu.");
-        });
+  const newBlog = new BlogModel(blogData);
+  newBlog
+    .save()
+    .then(() => {
+      console.log("Blog başarıyla kaydedildi:", blogData);
+      logger.info("Blog başarıyla kaydedildi:", blogData); //logger: Winston
+      response.send("CSRF ile blog başarıyla kaydedildi.");
+    })
+    .catch((err: any) => {
+      console.log("Veritabanı hatası:", err);
+      logger.error("Veritabanı hatası:", err); //logger: Winston
+      response.status(500).send("Veritabanı hatası oluştu.");
+    });
+});
+
+
+
+//Güvenlik İçin  REGISTER
+app.post("/", csrfProtection, (request: any, response: any) => {
+  const registerData = {
+    username: request.body.username,
+    password: request.body.password,
+    email: request.body.email,
+  };
+
+  if (!registerData.username || !registerData.password) {
+    return response.status(400).send("Register verisi eksik!");
+  }
+
+  if (!request.body) {
+    console.log("Boş gövde alındı.");
+    logger.info("Boş gövde alındı."); //logger: Winston
+  } else {
+    console.log(request.body);
+    console.log("Dolu gövde alındı.");
+
+    logger.info(request.body); //logger: Winston
+    logger.info("Dolu gövde alındı."); //logger: Winston
+  }
+
+  const RegisterModel = require("./models/mongoose_register_models"); // Modeli ekleyin
+
+  const newRegister = new RegisterModel(registerData);
+  newRegister
+    .save()
+    .then(() => {
+      console.log("Blog başarıyla kaydedildi:", registerData);
+      logger.info("Blog başarıyla kaydedildi:", registerData); //logger: Winston
+      response.send("CSRF ile blog başarıyla kaydedildi.");
+    })
+    .catch((err: any) => {
+      console.log("Veritabanı hatası:", err);
+      logger.error("Veritabanı hatası:", err); //logger: Winston
+      response.status(500).send("Veritabanı hatası oluştu.");
+    });
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -310,15 +356,21 @@ app.set("view engine", "ejs");
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Router (Rotalar)
 const blogRoutes = require("../routes/blog_api_routes");
+const registerRoutes = require("../routes/register_api_routes");
+
 const { request } = require("http");
+
 
 // http://localhost:1111/blog
 app.use("/blog", blogRoutes);
 
+// http://localhost:1111/register
+app.use("/register", registerRoutes);
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 404 Hata sayfası
-app.use((request:any, response:any, next:any) => {
+app.use((request: any, response: any, next: any) => {
   response.status(404).render("404", { url: request.originalUrl });
 });
 
