@@ -31,6 +31,7 @@ EJS(Embedded JavaScript  bunu node.js kullandığımızda mongodb, api gibi veri
   <!-- start codes -->
 
   <h1 class="text-center text-uppercase text-primary">Register Sayfası</h1>
+  <!-- Portlarla ilğili sıkıntı yaşamamak için ekledim. -->
   <p>
     <%= csrfToken %>
   </p>
@@ -47,6 +48,7 @@ EJS(Embedded JavaScript  bunu node.js kullandığımızda mongodb, api gibi veri
     <div class="form-group mb-3">
       <span for="header">User Name</span>
       <!-- required kaldırdım -->
+      <!-- id yi inputa erişmek için, name backend için kullandım. autofocus= Form ilk açıldığında dolacak yeri gösterir. -->
       <input type="text" id="username" name="username" class="form-control" placeholder="username" autofocus />
     </div>
 
@@ -106,7 +108,7 @@ EJS(Embedded JavaScript  bunu node.js kullandığımızda mongodb, api gibi veri
 
   <!-- external js -->
   <!-- NOT: `/public/js/styles.js` için  public dizininde olması gerekiyor -->
-  <script src="/js/blog.js"></script>
+  <script src="/js/register.js"></script>
 </body>
 
 </html>
