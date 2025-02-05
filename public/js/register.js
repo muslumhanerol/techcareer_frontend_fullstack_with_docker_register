@@ -1,10 +1,9 @@
 // alert("public/js/register.js");
 
 /*
-header: String,
-content: String,
-author: String,
-tags: String,
+username: String,
+password: String,
+email: String,
 */
 
 // jQuery dosyalar hazırsa başlayabilir

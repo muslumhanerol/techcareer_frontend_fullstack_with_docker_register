@@ -1,3 +1,5 @@
+# Git tarafından takip edilmesini istemediğimiz dosyaları buraya ekliyoruz. Özel bilgiler takip edilmesin diye.
+
 # Special My Git untrackted
 /node_modules
 

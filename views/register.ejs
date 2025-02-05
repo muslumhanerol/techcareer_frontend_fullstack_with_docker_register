@@ -36,10 +36,10 @@ EJS(Embedded JavaScript  bunu node.js kullandığımızda mongodb, api gibi veri
     <%= csrfToken %>
   </p>
 
-  <!-- Blog Form -->
-  <!-- <form id="blog-form"> -->
+  <!-- Register Form -->
+  <!-- <form id="register-form"> -->
   <!-- CSRF (Cross-Site Request Forgery):  action,POST için eklendi -->
-  <!-- blog için express router(yönlendirmesini yapacağım bunun için server.ts gelen verilerden kullanacağım) -->
+  <!-- register için express router(yönlendirmesini yapacağım bunun için server.ts gelen verilerden kullanacağım) -->
   <form action="/register" method="POST" id="register-form">
     <!-- Dikkat: Eğer bunu yazmazsanız hata alırsınız. CSRF (Cross-Site Request Forgery) -->
     <input type="hidden" name="_csrf" id="_csrf" value="<%= csrfToken %>" />

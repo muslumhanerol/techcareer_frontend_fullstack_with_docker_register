@@ -51,7 +51,7 @@ const handleError = (err, response, message) => {
 // http://localhost:1111
 
 router.post("/", async (request, response) => {
-    // Mongoose Blog Model Verileri Almak
+    // Mongoose Register Model Verileri Almak
     const create = new MongooseRegisterModelApi({
         username: request.body.username,
         password: request.body.password,
@@ -115,7 +115,7 @@ router.get("/", async (request, response) => {
 }); //end list => get
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-// UPDATE BLOG
+// UPDATE BLOG Güncelleme ve silmede id alınır diğerlerinde alınmaz.
 // PUT isteği ile mongodb üzerinden veri güncelleyeceğiz.
 // NOT: delete ve update işlemlerinde ID kullanılır.
 router.put("/:id", async (request, response) => {

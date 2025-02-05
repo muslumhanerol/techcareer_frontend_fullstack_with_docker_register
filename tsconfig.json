@@ -10,6 +10,12 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  //src içinde olanlar ve herşey.
+  "include": [
+    "src/**/*"
+  ],
+  //dahil edilmeyecekler.
+  "exclude": [
+    "node_modules"
+  ]
 }

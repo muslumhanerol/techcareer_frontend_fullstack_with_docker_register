@@ -61,7 +61,7 @@ const databaseLocalUrl = "mongodb://localhost:27017/blogDB";
 const databaseDockerUrl = "mongodb://localhost:27000/blogDB";
 // MongoDB Cloud (username,password)
 // 3.YOL (CLOUD)
-const databaseCloudUrl = "mongodb+srv://hamitmizrak:<password>@offlinenodejscluster.l3itd.mongodb.net/?retryWrites=true&w=majority&appName=OfflineNodejsCluster";
+const databaseCloudUrl = "mongodb+srv://muslumhanerol:<password>@offlinenodejscluster.l3itd.mongodb.net/?retryWrites=true&w=majority&appName=OfflineNodejsCluster";
 // 4.YOL (.dotenv)
 require("dotenv").config();
 // Localhostta MongoDB yüklüyse)
