@@ -27,7 +27,8 @@ app.use(morgan("combined")); //dev: uzun ve renkli loglar göster
 const router = express.Router();
 
 // Mongoose BlogPostSchema Import
-const MongooseBlogModelApi = require("../models/mongoose_blog_models");
+const MongooseRegisterModelApi = require("../models/mongoose_register_models");
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,11 +52,10 @@ const handleError = (err, response, message) => {
 
 router.post("/", async (request, response) => {
     // Mongoose Blog Model Verileri Almak
-    const create = new MongooseBlogModelApi({
-        header: request.body.header,
-        content: request.body.content,
-        author: request.body.author,
-        tags: request.body.tags,
+    const create = new MongooseRegisterModelApi({
+        username: request.body.username,
+        password: request.body.password,
+        email: request.body.email,
     }); //end create
 
     // Mongoose Blog Modelda Alınan Verileri Gönder
