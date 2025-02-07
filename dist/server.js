@@ -213,7 +213,7 @@ app.get("/", (req, res) => {
 });
 // Formu render eden rota ("/")
 // Anasayfaya yönlendir.
-app.get("/blog", csrfProtection, (request, response) => {
+app.get("/blog/api", csrfProtection, (request, response) => {
     // İstek gövdesinde JSON(Javascript Object Notation) formatında veri göndereceğini belirtir.
     //response.setHeader("Content-Type", "application/json");
     //response.setHeader("Content-Type", "text/plain"); // name Hamit surnameMızrak
@@ -243,7 +243,7 @@ app.get("/blog", csrfProtection, (request, response) => {
 // DİKKATT: Eğer  blog_api_routes.js post kısmında event.preventDefault(); kapatırsam buraki kodlar çalışır.
 // blog için CSRF koruması eklenmiş POST işlemi
 // app.post("/blog", csrfProtection, (request, response) => {
-app.post("/", csrfProtection, (request, response) => {
+app.post("/blog/api", csrfProtection, (request, response) => {
     const blogData = {
         header: request.body.header,
         content: request.body.content,
@@ -289,7 +289,7 @@ app.set("view engine", "ejs");
 const blogRoutes = require("../routes/blog_api_routes");
 const { request } = require("http");
 // http://localhost:1111/blog
-app.use("/blog/api", blogRoutes);
+app.use("/blog/", blogRoutes);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 404 Hata sayfası
