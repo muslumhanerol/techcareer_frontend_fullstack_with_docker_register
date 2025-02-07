@@ -22,8 +22,8 @@ $(document).ready(function () {
 
     // İçerik harf sınırını kontrol etme fonksiyonu
     const updateCharCount = () => {
-        const content = $("#content").val();
-        const charCount = content.length;
+        const username = $("#username").val();
+        const charCount = username.length;
         const remainingChars = maxChars - charCount;
 
         $("#char-count").text(`Kalan Harf Sayısı: ${remainingChars}`);
