@@ -1,15 +1,8 @@
 /*
-Node.js ve Express.js kullanarak register projesi için gerekli yönetim sistemlerinde kullanmak üzere
+Node.js ve Express.js kullanarak blog projesi için gerekli yönetim sistemlerinde kullanmak üzere
 CRUD (Create Read Update Delete) için gerekli API'ler yazalım.
-Yazacağımız API ile MongoDB veritabanında register projemiz için yazma, okuma, silme, güncelleme işlemleri yapacağız.
+Yazacağımız API ile MongoDB veritabanında blog projemiz için yazma, okuma, silme, güncelleme işlemleri yapacağız.
 Aşağıdaki kodta Exress.js yardımıyla Router  nesnesini farklı HTTP isteklerine cevap verebilecek API ile router yapılar oluşturulacaktır.
-*/
-
-/*
-http://localhost:1111/	index44.html açılacak
-http://localhost:1111/register	register.ejs açılacak
-http://localhost:1111/register/api	JSON formatında register listesi dönecek
-http://localhost:1111/register/api/:id	Belirli registeru getirecek
 */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -33,8 +26,10 @@ app.use(morgan("combined")); //dev: uzun ve renkli loglar göster
 // Router Import
 const router = express.Router();
 
-// Mongoose registerPostSchema Import
-const MongooseregisterModelApi = require("../models/mongoose_blog_register_models");
+// Mongoose BlogPostSchema Import
+const MongooseRegisterModelApi = require("../models/mongoose_blog_register_models");
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Dikkat: `router.` sonda yapılacak işlemlerde sadece ama sadece get,post,put,delete
@@ -45,25 +40,25 @@ const MongooseregisterModelApi = require("../models/mongoose_blog_register_model
 // DRY Principle (Don't Repeat Yourself)
 const handleError = (err, response, message) => {
     console.error(err);
-    response.status(400).json({message});
+    response.status(400).json({ message });
 }; //end handleError
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// CREATE register
-// POST isteği ile yeni bir register datası oluşturuyoruz.
+// CREATE BLOG
+// POST isteği ile yeni bir blog datası oluşturuyoruz.
 // Gönderilen bu veriyi almak için request.body ile içeri aktarmış olacağız.
 // http://localhost:1111
 
 router.post("/", async (request, response) => {
-    // Mongoose register Model Verileri Almak
-    const create = new MongooseregisterModelApi({
-        username: request.body.header,
-        password: request.body.content,
-        email: request.body.author,
+    // Mongoose Register Model Verileri Almak
+    const create = new MongooseRegisterModelApi({
+        username: request.body.username,
+        password: request.body.password,
+        email: request.body.email,
     }); //end create
 
-    // Mongoose register Modelda Alınan Verileri Gönder
+    // Mongoose Blog Modelda Alınan Verileri Gönder
     try {
         // MongoDB'ye kaydet
         await create.save();
@@ -80,37 +75,37 @@ router.post("/", async (request, response) => {
 }); //end create => post
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-// LIST register
+// LIST REGİSTER
 // GET isteği ile mongodb üzerinden bütün verileri alacağız.
-// http://localhost:1111
+// http://localhost:1112
 router.get("/", async (request, response) => {
     try {
         // MongoDB üzerinden get isteği attık
-        const find = await MongooseregisterModelApi.find();
+        const find = await MongooseRegisterModelApi.find();
 
         // Tarihi Bizim istediğimiz şekilde yazalım.
-        const formattedDateTurkish = await Promise.all(find.map(async (temp) => {
-            // Görüntüleme sayısını artırma
-            await temp.incrementViews();
+        // const formattedDateTurkish = await Promise.all(find.map(async (temp) => {
+        //     // Görüntüleme sayısını artırma
+        //     await temp.incrementViews();
 
-            return {
-                ...temp._doc, // Tüm register verilerini kopyala
-                dateInformation: new Date(temp.createdAt).toLocaleString("tr-TR", {
-                    year: "numeric", month: "long", day: "numeric", year: "numeric", hour: "2-digit", second: "2-digit",
-                }), //end createdAt
-            }; //end return
-        })); //end formattedDateTurkish
+        //     return {
+        //         ...temp._doc, // Tüm blog verilerini kopyala
+        //         dateInformation: new Date(temp.createdAt).toLocaleString("tr-TR", {
+        //             year: "numeric", month: "long", day: "numeric", year: "numeric", hour: "2-digit", second: "2-digit",
+        //         }), //end createdAt
+        //     }; //end return
+        // })); //end formattedDateTurkish
 
-        // Her register sayfasına bakıldıkça sayacçı 1 artır
+        // Her blog sayfasına bakıldıkça sayacçı 1 artır
         // const viewCounter = await Promise.all(
-        //   find.map(async (register) => {
-        //     await register.incrementViews(); // Görüntüleme sayısını artır
-        //     return register;
+        //   find.map(async (blog) => {
+        //     await blog.incrementViews(); // Görüntüleme sayısını artır
+        //     return blog;
         //   }) // end map
         // ); //end viewCounter
         // Dönüş değeri
 
-        response.status(200).json(formattedDateTurkish);
+        // response.status(200).json(formattedDateTurkish);
 
         // Listeleme başarılı
         console.log("Listeleme Başarılı");
@@ -120,14 +115,14 @@ router.get("/", async (request, response) => {
 }); //end list => get
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-// UPDATE register
+// UPDATE BLOG Güncelleme ve silmede id alınır diğerlerinde alınmaz.
 // PUT isteği ile mongodb üzerinden veri güncelleyeceğiz.
 // NOT: delete ve update işlemlerinde ID kullanılır.
 router.put("/:id", async (request, response) => {
     try {
         // MongoDB üzerinden id ile istek attık
-        const update = await MongooseregisterModelApi.findByIdAndUpdate(// ID almak
-            request.params.id, request.body, {new: true}); //end update
+        const update = await MongooseRegisterModelApi.findByIdAndUpdate(// ID almak
+            request.params.id, request.body, { new: true }); //end update
 
         // Dönüş değeri
         response.status(200).json(update);
@@ -140,7 +135,7 @@ router.put("/:id", async (request, response) => {
 }); //end update => put
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-// DELETE register
+// DELETE BLOG
 // DELETE isteği ile mongodb üzerinden id ile sileceğiz.
 // http://localhost:1111/1
 
@@ -150,11 +145,11 @@ router.delete("/:id", async (request, response) => {
         const id = request.params.id;
         console.log(id);
 
-        const deleteFindId = await MongooseregisterModelApi.findByIdAndDelete(id);
+        const deleteFindId = await MongooseRegisterModelApi.findByIdAndDelete(id);
         console.log(deleteFindId);
 
         // Dönüş değeri
-        response.status(200).json({message: `${id} nolu id silindi`});
+        response.status(200).json({ message: `${id} nolu id silindi` });
 
         // Listeleme başarılı
         console.log("Listeleme Başarılı");
@@ -165,15 +160,15 @@ router.delete("/:id", async (request, response) => {
 
 /////////////////////////////////////////////////////////////
 // EXPORT
+//router bağımlı hal getirildi.
 module.exports = router;
 
 /////////////////////////////////////////////////////////////
 // POSTMAN, cURL api test araçlarından bir tanesini kullanabilirsiniz.
 /*
 {
-    "header": "başlık",
-    "content": "başlık",
-    "author": "Hamit Mızrak",
-    "tags": "node",
+    "usrname": "başlık",
+    "password": "başlık",
+    "email": "Muslum Han Erol"    
 }
 */
