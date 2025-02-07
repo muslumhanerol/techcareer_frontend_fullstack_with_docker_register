@@ -1,4 +1,8 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 // http://localhost:1111/daily/list
 console.info("server.js Server 1111 portunda ayağa kalktı");
 // Bitirme Projesi
@@ -9,7 +13,7 @@ console.info("server.js Server 1111 portunda ayağa kalktı");
 // Import
 // Import Express (Express:  Node.js için esnek bir web uygulama çatısını inşa eder)
 // Bu modüllerle beraber HTTP istekleri(request) işleyecek ve istemciye(server) yanıt dönecektir.
-// DİKKAT: index.js  require("express") kullanılır 
+// DİKKAT: index.js  require("express") kullanılır
 // DİKKAT: index.ts  import("express") kullanılır.
 // Express Import
 const express = require("express");
@@ -25,6 +29,9 @@ const helmet = require("helmet");
 // Swagger UI
 // const swaggerJsDoc = require("swagger-jsdoc");
 // const swaggerUi = require("swagger-ui-express");
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// import
+const path_1 = __importDefault(require("path"));
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // bodyParser Import
 const bodyParser = require("body-parser");
@@ -50,18 +57,20 @@ if (process.env.NODE_ENV !== "production") {
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Mongo DB Bağlantısı
-// username:  hamitmizrak
-// password:  <password>
-// mongodb+srv://hamitmizrak:<password>@offlinenodejscluster.l3itd.mongodb.net/?retryWrites=true&w=majority&appName=OfflineNodejsCluster
 // Localhostta MongoDB yüklüyse)
 // Bu proje için docker-compose üzerinden 27017 porta sahip mongodb kurdum
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 // 1.YOL (LOCALHOST)
-const databaseLocalUrl = "mongodb://localhost:27017/blogDB";
+// .env dosyasındaki bilgilerden bağlantı URL'si oluşturuluyor
+const databaseLocalUrl = process.env.MONGO_USERNAME && process.env.MONGO_PASSWORD
+    ? `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@127.0.0.1:${process.env.MONGO_PORT}/blogDB`
+    : "mongodb://blogAdmin:BlogPass123@127.0.0.1:27017/blogDB";
 // 2.YOL (LOCALHOST)
 const databaseDockerUrl = "mongodb://localhost:27000/blogDB";
 // MongoDB Cloud (username,password)
 // 3.YOL (CLOUD)
-const databaseCloudUrl = "mongodb+srv://muslumhanerol:<password>@offlinenodejscluster.l3itd.mongodb.net/?retryWrites=true&w=majority&appName=OfflineNodejsCluster";
+const databaseCloudUrl = "mongodb+srv://hamitmizrak:<password>@offlinenodejscluster.l3itd.mongodb.net/?retryWrites=true&w=majority&appName=OfflineNodejsCluster";
 // 4.YOL (.dotenv)
 require("dotenv").config();
 // Localhostta MongoDB yüklüyse)
@@ -78,7 +87,8 @@ const dataUrl = [
 // 2.YOL
 //mongoose.connect(`${databaseCloudUrl}`, {useNewUrlParser:true, useUnifiedTopology:true}) // Eski MongoDB sürümleride
 mongoose
-    .connect(`${databaseDockerUrl}`)
+    // .connect(`${databaseDockerUrl}`)
+    .connect(`${databaseLocalUrl}`)
     .then(() => {
     console.log("Mongo DB Başarıyla Yüklendi");
 })
@@ -139,7 +149,6 @@ const limiter = rateLimit({
     message: "İstek sayısı fazla yapıldı, lütfen biraz sonra tekrar deneyiniz",
 });
 app.use("/blog/", limiter);
-app.use("/register/", limiter);
 // CORS
 // npm install cors
 // CORS (Cross-Origin Resource Sharing)
@@ -165,8 +174,24 @@ Kullanıcı browser üzerinden oturum açtığında ve kimlik doğrulama bilgile
 */
 // npm install csurf
 // npm install cookie-parser
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// STATIC (Ts için public dizini oluşturduk)
+// Uygulamada statik dosyaların HTL,CSS,JS,image v.b içerikler sunar.
+// public klasörü, statik doyalar için kök dizin olarak belirlenir.
+// Bu klasörde bulunan dosyalara tarayıcıdan direk erişim sağlanır.
+// Örnek: public klasöründe style.css adlı bir dosya varsa biz buna şu şekilde erişim sağlarız.
+// http://localhost:1111/style.css
+// app.use(express.static("public"));
+// 📌 Statik Dosya Servisi (index44.html'nin çalışması için)
+app.use(express.static(path_1.default.join(__dirname, "../public")));
+// 📌 Ana Sayfa (`index44.html`) Yönlendirmesi
+app.get("/", (req, res) => {
+    res.sendFile(path_1.default.join(__dirname, "public", "index.html"));
+});
 // Formu render eden rota ("/")
-app.get("/", csrfProtection, (request, response) => {
+// Anasayfaya yönlendir.
+app.get("/blog/api", csrfProtection, (request, response) => {
     // İstek gövdesinde JSON(Javascript Object Notation) formatında veri göndereceğini belirtir.
     //response.setHeader("Content-Type", "application/json");
     //response.setHeader("Content-Type", "text/plain"); // name Hamit surnameMızrak
@@ -196,7 +221,7 @@ app.get("/", csrfProtection, (request, response) => {
 // DİKKATT: Eğer  blog_api_routes.js post kısmında event.preventDefault(); kapatırsam buraki kodlar çalışır.
 // blog için CSRF koruması eklenmiş POST işlemi
 // app.post("/blog", csrfProtection, (request, response) => {
-app.post("/", csrfProtection, (request, response) => {
+app.post("/blog/api", csrfProtection, (request, response) => {
     const blogData = {
         header: request.body.header,
         content: request.body.content,
@@ -231,50 +256,6 @@ app.post("/", csrfProtection, (request, response) => {
         response.status(500).send("Veritabanı hatası oluştu.");
     });
 });
-//Güvenlik İçin  REGISTER
-app.post("/", csrfProtection, (request, response) => {
-    const registerData = {
-        username: request.body.username,
-        password: request.body.password,
-        email: request.body.email,
-    };
-    if (!registerData.username || !registerData.password) {
-        return response.status(400).send("Register verisi eksik!");
-    }
-    if (!request.body) {
-        console.log("Boş gövde alındı.");
-        logger.info("Boş gövde alındı."); //logger: Winston
-    }
-    else {
-        console.log(request.body);
-        console.log("Dolu gövde alındı.");
-        logger.info(request.body); //logger: Winston
-        logger.info("Dolu gövde alındı."); //logger: Winston
-    }
-    const RegisterModel = require("./models/mongoose_register_models"); // Modeli ekleyin
-    const newRegister = new RegisterModel(registerData);
-    newRegister
-        .save()
-        .then(() => {
-        console.log("Blog başarıyla kaydedildi:", registerData);
-        logger.info("Blog başarıyla kaydedildi:", registerData); //logger: Winston
-        response.send("CSRF ile blog başarıyla kaydedildi.");
-    })
-        .catch((err) => {
-        console.log("Veritabanı hatası:", err);
-        logger.error("Veritabanı hatası:", err); //logger: Winston
-        response.status(500).send("Veritabanı hatası oluştu.");
-    });
-});
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// STATIC (Ts için public dizini oluşturduk)
-// Uygulamada statik dosyaların HTL,CSS,JS,image v.b içerikler sunar.
-// public klasörü, statik doyalar için kök dizin olarak belirlenir.
-// Bu klasörde bulunan dosyalara tarayıcıdan direk erişim sağlanır.
-// Örnek: public klasöründe style.css adlı bir dosya varsa biz buna şu şekilde erişim sağlarız.
-// http://localhost:1111/style.css
-app.use(express.static("public"));
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // EJS(Embedded JavaScript) Görüntüleme motorunu aktifleştirdim
@@ -284,12 +265,9 @@ app.set("view engine", "ejs");
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Router (Rotalar)
 const blogRoutes = require("../routes/blog_api_routes");
-const registerRoutes = require("../routes/register_api_routes");
 const { request } = require("http");
 // http://localhost:1111/blog
-app.use("/blog", blogRoutes);
-// http://localhost:1111/register
-app.use("/register", registerRoutes);
+app.use("/blog/", blogRoutes);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 404 Hata sayfası
@@ -315,8 +293,8 @@ netsh advfirewall firewall add rule name="Block UDP Port 1111" protocol=UDP dir=
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Sunucu başlatma
-const port = 1111;
-app.listen(port, () => {
-    console.log(`Sunucu ${port} portunda çalışıyor http://localhost:${port}`);
-    logger.info(`Sunucu ${port} portunda çalışıyor http://localhost:${port}`); //logger: Winston
+const PORT = process.env.LOCALHOST_PORT || 1111;
+app.listen(PORT, () => {
+    console.log(`Sunucu ${PORT} portunda çalışıyor http://localhost:${PORT}`);
+    logger.info(`Sunucu ${PORT} portunda çalışıyor http://localhost:${PORT}`); //logger: Winston
 });

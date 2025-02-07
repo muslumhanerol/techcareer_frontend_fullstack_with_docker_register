@@ -19,6 +19,7 @@ TYPESCRIPT="Typescript Install"
 PACKAGE_JSON="package.json"
 SERVER_START="server start lite-server"
 MONGO_ENV="Mongo ENV"
+MONGODOCKER="Mongo Docker Kurulumu"
 
 ###################################################
 # Color
@@ -470,7 +471,6 @@ npm_global_save
 #####################################################################################################
 # Typescript (Install)
 typescript_install() {
-
     # Geriye Sayım
     ./bashscript_countdown.sh
     #if [ -f "./bashscript_countdown.sh" ]; then
@@ -751,13 +751,6 @@ EOL
 server_start
 #####################################################################################################
 #####################################################################################################
-
-
-#####################################################################################################
-#####################################################################################################
-
-#####################################################################################################
-#####################################################################################################
 # Mongo_env (Install)
 mongo_env() {
     # Geriye Say
@@ -776,10 +769,15 @@ mongo_env() {
         if [ ! -f ".env" ]; then
             echo ".env oluşturuluyor..."
             cat > .env <<EOL
+; PORT
+LOCALHOST_PORT=1111
+
 ; Local
-MONGO_USERNAME=hamitmizrak
-MONGO_PASSWORD=
+MONGO_USERNAME=root
+MONGO_PASSWORD=rootroot
 MONGO_PORT=27017
+MONGO_LOCALHOST=127.0.0.1 ; Eğer localhost dns çalışmazsa 127.0.0.1 ip deneyin
+
 
 ; Cloud
 MONGO_CLOUD_USERNAME=hamitmizrak
@@ -789,7 +787,7 @@ MONGO_CLOUD_PORT=27017
 ; Docker
 MONGO_DOCKER_USERNAME=hamitmizrak
 MONGO_DOCKER_PASSWORD=
-MONGO_DOCKER_PORT=27017
+MONGO_DOCKER_PORT=27000
 EOL
             echo ".env.json oluşturuldu ve içerik eklendi."
         else
@@ -804,6 +802,176 @@ EOL
 
 # Fonksiyonu çalıştır
 mongo_env
+
+#####################################################################################################
+#####################################################################################################
+# Docker üzerinden mongodb
+docker_mongo() {
+    sleep 2
+    echo -e "\n###### ${DOCKER_MONGO} ######  "
+    ./bashscript_countdown.sh
+    # Docker Information
+    docker --version
+    docker ps
+    docker search mongo #(OFFICAL)
+
+    # Geriye Say
+    ./bashscript_countdown.sh
+
+    # Güncelleme Tercihi
+    echo -e "Güncelleme İçin Seçim Yapınız\n1-)MongoDB\n2-)MongoDB Volume\n3-)Mongo Admin\n4-)Çıkış "
+    read chooise
+
+    # Girilen sayıya göre tercih
+    case $chooise in
+    1)
+        echo -e "\e[36m\n###### ${DOCKER_MONGO} ######  \e[0m"
+        echo -e "\e[33mDocker Üzerinden MongoDB Yüklemek İster misiniz ? e/h\e[0m"
+        read -p "" dockerMongoResult
+        if [[ $dockerMongoResult == "e" || $dockerMongoResult == "E" ]]; then
+            echo -e "\e[32mDocker Üzerinden MongoDB Yüklenmeye başlandı ...\e[0m"
+            # Volume olmadan
+            # docker container run --detach --name mongodb-container --publish 27000:27017 mongo
+            # docker container run --detach --name mongodb-container --publish 27000:27017 mongo:latest
+             docker container run --detach --name mongodb-container --publish 27000:27017 mongo:8.0.4
+             ./bashscript_countdown.sh
+        else
+            echo -e "${RED}MongoDB ekleme yapılmadı${NC}"
+        fi
+        ;;
+    2)
+        read -p "Docker Üzerinden MongoDB Admin Yüklemek İstiyor musunuz ? e/h " systemListUpdatedResult
+        if [[ $systemListUpdatedResult == "e" || $systemListUpdatedResult == "E" ]]; then
+            echo -e "Sistem Paket Güncellenmesi Başladı ..."
+            ./bashscript_countdown.sh
+             # Username ve Password olarak
+             docker container run -d --name mongodb-container  -p 27000:27017 \
+             -e MONGO_INITDB_ROOT_USERNAME=root \
+             -e MONGO_INITDB_ROOT_PASSWORD=rootroot \
+             mongo
+
+             # Shelling
+             mongosh
+             mongo --host localhost --port 27000 -u admin -p rootroot --authenticationDatabase admin
+        else
+            echo -e "Sistem Paket Güncellenmesi Yapılmadı... "
+        fi
+        ;;
+    3)
+        read -p "Docker ongodb Volume olarak Yüklemek ister misiniz ? e/h " kernelUpdatedResult
+        if [[ $kernelUpdatedResult == "e" || $kernelUpdatedResult == "E" ]]; then
+            echo -e "Docker Mongodb Volume olarak Yüklemek  ... "
+
+            # Geriye Say
+             # Volume Ekleyerek
+              docker volume create mongodb_data
+              docker container run -d --name mongodb-container  -p 27000:27017 -v mongodb_data:/data/db mongo:8.0.4
+        else
+            echo -e "Docker Mongodb Volume olarak Yüklemek ... "
+        fi
+        ;;
+    *)
+        echo -e "Lütfen sadece size belirtilen seçeneği seçiniz"
+        ;;
+    esac
+
+     # Docker komutları
+    docker ps    # Sadece çalışan containerlerı gösterir
+    docker ps -a # Kapatılmış containerıda gösterir
+}
+docker_mongo
+
+#####################################################################################################
+#####################################################################################################
+# docker_mongo_terminal
+docker_mongo_terminal() {
+    sleep 2
+    echo -e "\n###### ${MONGODOCKER} ######  "
+    read -p "Docker üzerinden Mongodb terminale Bağlanmak İster misiniz ? e/h " docker_mongo_terminal
+    if [[ $docker_mongo_terminal == "e" || $docker_mongo_terminal == "E" ]]; then
+        echo -e "Docker mongo_terminal açılıyor ... "
+
+        # Geriye Say
+        ./bashscript_countdown.sh
+
+        # Docker komutları
+        docker ps    # Sadece çalışan containerlerı gösterir
+        docker ps -a # Kapatılmış containerıda gösterir
+        #docker stop mongodb-volume-container # Docker ilgili container kapat
+        #docker start mongodb-volume-container # Docker ilgili container başlat
+        #docker rm mongodb-volume-container # Docker ilgili container sil
+
+        # Docker Terminali
+        # docker exec -it mongodb-container  mongosh   # Linux için
+        winpty docker exec -it mongodb-container  mongosh # Windows için
+
+        # Mongo Terminalinde
+        show dbs; # Mongo Mevcut databaseleri göster
+        use blogDB; # Mongo'da blogDB olan database seç
+        show dbs; # Mongo Mevcut databaseleri göster
+        # db.createCollection("posts");  # Mongo'da byeni Collections oluşturmak
+#        db.posts.insertOne({
+#            header: "İlk Blog Yazım",
+#            content: "Bu benim ilk blog yazımın içeriğidir.",
+#            author: "Hamit Mızrak.",
+#            tags: "java,jsp",
+#        })
+        # db.posts.find().pretty(); # Blog yazısını getir
+    else
+        echo -e "Docker_mongo_terminal Seçilmedi..."
+    fi
+}
+docker_mongo_terminal
+
+#####################################################################################################
+#####################################################################################################
+# Mongo_env (Install)
+mongo_setup() {
+    mongosh --version
+    # Geriye Say
+    ./bashscript_countdown.sh
+    MONGO_LOCALHOST="Mongo Localhost veya 127.0.0.1"
+
+    echo -e "\e[36m\n###### ${MONGO_LOCALHOST} ######  \e[0m"
+    echo -e "\e[33mMongo Localhost oluşturulsun mu ? e/h\e[0m"
+    read -p "" mongoSetup
+    if [[ $mongoSetup == "e" || $mongoSetup == "E" ]]; then
+        echo -e "\e[32mMongo Localhost Setup ...\e[0m"
+
+        # Geriye Sayım
+        ./bashscript_countdown.sh
+        mongosh <<EOF
+
+use blogDB
+db.getUsers()
+
+db.createUser({
+user: "root",
+pwd: "rootroot",
+roles:[
+  {
+    role: "readWrite",db:"blogDB"
+  }
+]
+})
+
+db.getUsers()
+db.posts.insertOne({
+    header: "İlk Blog Yazım",
+    content: "Bu benim ilk blog yazımın içeriğidir.",
+    author: "Hamit Mızrak.",
+    tags: "java,jsp",
+})
+EOF
+        echo -e "\e[32m.Mongo Localhost Setup kurulumu tamamlandı!\e[0m"
+    else
+        echo -e "\e[31mMongo Localhost Setup kurulumu iptal edildi.\e[0m"
+    fi
+}
+
+# Fonksiyonu çalıştır
+mongo_setup
+
 
 #####################################################################################################
 #####################################################################################################

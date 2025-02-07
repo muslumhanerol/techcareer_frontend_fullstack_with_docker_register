@@ -5,6 +5,13 @@ Yazacağımız API ile MongoDB veritabanında blog projemiz için yazma, okuma, 
 Aşağıdaki kodta Exress.js yardımıyla Router  nesnesini farklı HTTP isteklerine cevap verebilecek API ile router yapılar oluşturulacaktır.
 */
 
+/*
+http://localhost:1111/	index44.html açılacak
+http://localhost:1111/blog	blog.ejs açılacak
+http://localhost:1111/blog/api	JSON formatında blog listesi dönecek
+http://localhost:1111/blog/api/:id	Belirli blogu getirecek
+*/
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Import Express (Express:  Node.js için esnek bir web uygulama çatısını inşa eder)
 // Bu modüllerle beraber HTTP istekleri(request) işleyecek ve istemciye(server) yanıt dönecektir.
@@ -29,7 +36,6 @@ const router = express.Router();
 // Mongoose BlogPostSchema Import
 const MongooseBlogModelApi = require("../models/mongoose_blog_models");
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Dikkat: `router.` sonda yapılacak işlemlerde sadece ama sadece get,post,put,delete
 // Örnek:get(find, list), post(create), put(Güncelleme), delete(Silme) yazmak zorundayız.
@@ -39,7 +45,7 @@ const MongooseBlogModelApi = require("../models/mongoose_blog_models");
 // DRY Principle (Don't Repeat Yourself)
 const handleError = (err, response, message) => {
     console.error(err);
-    response.status(400).json({ message });
+    response.status(400).json({message});
 }; //end handleError
 
 
@@ -122,7 +128,7 @@ router.put("/:id", async (request, response) => {
     try {
         // MongoDB üzerinden id ile istek attık
         const update = await MongooseBlogModelApi.findByIdAndUpdate(// ID almak
-            request.params.id, request.body, { new: true }); //end update
+            request.params.id, request.body, {new: true}); //end update
 
         // Dönüş değeri
         response.status(200).json(update);
@@ -149,7 +155,7 @@ router.delete("/:id", async (request, response) => {
         console.log(deleteFindId);
 
         // Dönüş değeri
-        response.status(200).json({ message: `${id} nolu id silindi` });
+        response.status(200).json({message: `${id} nolu id silindi`});
 
         // Listeleme başarılı
         console.log("Listeleme Başarılı");
