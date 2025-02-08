@@ -104,7 +104,7 @@ RegisterPostSchema.set("toJSON", { virtuals: true });
 // module.exports = mongoose.model("MongoBlogModel", RegisterPostSchema);
 
 // 2.YOL
-const Register = mongoose.model("MongoRegisterModel", RegisterPostSchema);
+const Register = mongoose.model("MongoRegisterModel", RegisterPostSchema); h
 module.exports = Register; //Dışarının kullanımına açtık.
 
 

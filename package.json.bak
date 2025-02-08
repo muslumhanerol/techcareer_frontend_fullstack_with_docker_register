@@ -8,9 +8,10 @@
     "start": "node  ./dist/server.js",
     "server:start": "lite-server",
     "build_watch": "tsc -w --pretty",
-    "nodemon_app_watch": "nodemon --watch src --watch dist ./dist/index.js",
+    "nodemon_app_watch": "nodemon --watch src --watch dist ./dist/server.js",
     "dev:seri": "npm-run-all --serial build_watch nodemon_app_watch",
-    "dev:paralel": "concurrently -k \"npm run build_watch\" \"npm run nodemon_app_watch\" \"npm run server:start\""
+    "dev:paralel": "concurrently -k \"npm run build_watch\" \"npm run nodemon_app_watch\" \"npm run server:start\"",
+    "dev:start": "npm-run-all --serial build_watch nodemon_app_watch start"
   },
   "keywords": [
     "Html5, Css3, Js, NodeJS, ES5+, Bootstrap5, "
