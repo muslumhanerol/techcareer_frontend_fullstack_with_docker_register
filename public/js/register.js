@@ -21,21 +21,21 @@ $(document).ready(function () {
     };
 
     // İçerik harf sınırını kontrol etme fonksiyonu
-    const updateCharCount = () => {
-        const username = $("#username").val();
-        const charCount = username.length;
-        const remainingChars = maxChars - charCount;
+    // const updateCharCount = () => {
+    //     const username = $("#username").val();
+    //     const charCount = username.length;
+    //     const remainingChars = maxChars - charCount;
 
-        $("#char-count").text(`Kalan Harf Sayısı: ${remainingChars}`);
+    //     $("#char-count").text(`Kalan Harf Sayısı: ${remainingChars}`);
 
-        if (remainingChars < 0) {
-            $("#char-count").removeClass("text-success").addClass("text-danger");
-            showError("#content", "İçerik 2000 harften fazla olamaz!");
-        } else {
-            $("#char-count").removeClass("text-danger").addClass("text-success");
-            $(".error-message").remove();
-        }
-    };
+    //     if (remainingChars < 0) {
+    //         $("#char-count").removeClass("text-success").addClass("text-danger");
+    //         showError("#content", "İçerik 2000 harften fazla olamaz!");
+    //     } else {
+    //         $("#char-count").removeClass("text-danger").addClass("text-success");
+    //         $(".error-message").remove();
+    //     }
+    // };
 
     // Form doğrulama fonksiyonu
     const validateForm = () => {
@@ -44,47 +44,38 @@ $(document).ready(function () {
         const content = $("#content").val();
         const charCount = content.length;
 
-        if ($("#header").val().trim() === "") {
-            showError("#header", "Başlık boş bırakılamaz!");
+        if ($("#username").val().trim() === "") {
+            showError("#username", "User name boş bırakılamaz!");
             isValid = false;
         } else {
-            showValid("#header", "Başlık geçerli.");
+            showValid("#username", "User name geçerli.");
         }
 
-        if (content.trim() === "") {
-            showError("#content", "İçerik boş bırakılamaz!");
-            isValid = false;
-        } else if (charCount > maxChars) {
-            showError("#content", "İçerik 2000 harften fazla olamaz!");
+        if ($("#password").val().trim() === "") {
+            showError("#password", "Password boş bırakılamaz!");
             isValid = false;
         } else {
-            showValid("#content", "İçerik geçerli.");
+            showValid("#password", "Password geçerli.");
         }
 
-        if ($("#author").val().trim() === "") {
-            showError("#author", "Yazar adı boş bırakılamaz!");
-            isValid = false;
-        } else {
-            showValid("#author", "Yazar adı geçerli.");
-        }
 
-        if ($("#tags").val().trim() === "") {
-            showError("#tags", "En az bir etiket eklemelisiniz!");
+        if ($("#email").val().trim() === "") {
+            showError("#email", "Şifre adı boş bırakılamaz!");
             isValid = false;
         } else {
-            showValid("#tags", "Etiket geçerli.");
+            showValid("#email", "Şifre adı geçerli.");
         }
 
         return isValid;
     };
 
     // Kullanıcı içerik alanına yazdıkça harf sayısını güncelle
-    $("#content").on("input", function () {
-        updateCharCount();
-    });
+    // $("#content").on("input", function () {
+    //     updateCharCount();
+    // });
 
     // Kullanıcı input'a yazarken hataları kaldır ve geçerli mesaj ekle
-    $("#header, #author, #tags").on("input", function () {
+    $("#username, #password, #email").on("input", function () {
         const field = $(this);
         if (field.val().trim() === "") {
             showError(field, "Bu alan boş bırakılamaz!");
@@ -95,7 +86,7 @@ $(document).ready(function () {
 
     // Formu sıfırlama fonksiyonu
     const resetForm = () => {
-        $("#blog-form")[0].reset();
+        $("#register-form")[0].reset();
         isUpdating = false;
         updateId = null;
         $("#submit-btn").text("Ekle");
@@ -103,24 +94,20 @@ $(document).ready(function () {
         updateCharCount();
     };
 
-    // Blog listesini getir
+    // Register listesini getir
     const fetchBlogList = () => {
         $.ajax({
-            url: "/blog/api",
+            url: "/register/api",
             method: "GET",
             success: function (data) {
-                const $tbody = $("#blog-table tbody").empty();
+                const $tbody = $("#register-table tbody").empty();
                 data.forEach(item => {
                     $tbody.append(`
                         <tr data-id="${item._id}">
                             <td>${item._id}</td>
-                            <td>${item.header}</td>
-                            <td>${item.content}</td>
-                            <td>${item.author}</td>
-                            <td>${item.tags}</td>
-                            <td>${item.views}</td>
-                            <td>${item.status}</td>
-                            <td>${item.dateInformation}</td>
+                            <td>${item.username}</td>
+                            <td>${item.password}</td>
+                            <td>${item.email}</td>                            
                             <td>
                                 <button class="btn btn-primary edit-btn"><i class="fa-solid fa-wrench"></i></button>
                                 <button class="btn btn-danger delete-btn"><i class="fa-solid fa-trash"></i></button>
@@ -140,7 +127,7 @@ $(document).ready(function () {
     };
 
     // Blog ekleme/güncelleme işlemi
-    $("#blog-form").on("submit", function (event) {
+    $("#register-form").on("submit", function (event) {
         event.preventDefault();
 
         // Form doğrulama
@@ -148,19 +135,18 @@ $(document).ready(function () {
             return;
         }
 
-        const blogData = {
-            header: $("#header").val(),
-            content: $("#content").val(),
-            author: $("#author").val(),
-            tags: $("#tags").val(),
+        const registerData = {
+            username: $("#username").val(),
+            password: $("#password").val(),
+            email: $("#email").val(),
             _csrf: $("input[name='_csrf']").val()
         };
 
         if (isUpdating && updateId) {
             $.ajax({
-                url: `/blog/api/${updateId}`,
+                url: `/register/api/${updateId}`,
                 method: "PUT",
-                data: blogData,
+                data: registerData,
                 success: function () {
                     fetchBlogList();
                     resetForm();
@@ -169,9 +155,9 @@ $(document).ready(function () {
             });
         } else {
             $.ajax({
-                url: "/blog/api",
+                url: "/register/api",
                 method: "POST",
-                data: blogData,
+                data: registerData,
                 success: function () {
                     fetchBlogList();
                     resetForm();
@@ -182,14 +168,13 @@ $(document).ready(function () {
     });
 
     // Blog güncelleme işlemi
-    $("#blog-table tbody").on("click", ".edit-btn", function () {
+    $("#register-table tbody").on("click", ".edit-btn", function () {
         const row = $(this).closest("tr");
         const id = row.data("id");
 
-        $("#header").val(row.find("td:eq(1)").text());
-        $("#content").val(row.find("td:eq(2)").text());
-        $("#author").val(row.find("td:eq(3)").text());
-        $("#tags").val(row.find("td:eq(4)").text());
+        $("#username").val(row.find("td:eq(1)").text());
+        $("#password").val(row.find("td:eq(2)").text());
+        $("#email").val(row.find("td:eq(3)").text());
 
         isUpdating = true;
         updateId = id;
@@ -197,10 +182,10 @@ $(document).ready(function () {
     });
 
     // Blog silme işlemi
-    $("#blog-table tbody").on("click", ".delete-btn", function () {
+    $("#register-table tbody").on("click", ".delete-btn", function () {
         const id = $(this).closest("tr").data("id");
 
-        if (!confirm(`${id} nolu Blog'u Silmek İstiyor musunuz?`)) return;
+        if (!confirm(`${id} nolu Kullanıcıyı'u Silmek İstiyor musunuz?`)) return;
 
         $.ajax({
             url: `/register/api/${id}`,
