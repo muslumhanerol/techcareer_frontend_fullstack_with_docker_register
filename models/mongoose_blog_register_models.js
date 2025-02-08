@@ -41,7 +41,7 @@ const RegisterPostSchema = new mongoose.Schema({
     //     type: String, default: Date.now(),
     // },
 
-    // VIEWS
+    // // VIEWS
     // Blog Görüntüleme (Default: 0)
     // views: {
     //     type: Number, default: 0, min: [0, "Blog gösterimi için Negatif değer verilmez"],
@@ -50,9 +50,9 @@ const RegisterPostSchema = new mongoose.Schema({
     // STATUS
     // Durum (Proje için bu bir taslak mı yoksa canlı ortam için mi ?)
     // Enum Durum Alanı: status: Blog gönderisinin durumu "draft" veya "published" olarak belirlenir. Bu, bir gönderinin taslak mı yoksa yayınlanmış mı olduğunu gösterir.
-    status: {
-        type: String, enum: ["draft", "published"], default: "draft",
-    },
+    // status: {
+    //     type: String, enum: ["draft", "published"], default: "draft",
+    // },
 }, //end BlogPostSchema {}
     {
         // Oluşturma ve güncellemem zamanları sisteme eklemek
@@ -97,11 +97,11 @@ RegisterPostSchema.set("toJSON", { virtuals: true });
 // Module Exports modelName(BlogModel)
 // BlogModel modelini dışa aktarmak
 // Post kullanımı daha yaygındır
-// module.exports = mongoose.model('Post', BlogPostSchema );
+// module.exports = mongoose.model('Post', RegisterPostSchema );
 
 // Module
 // 1.YOL
-// module.exports = mongoose.model("MongoBlogModel", BlogPostSchema);
+// module.exports = mongoose.model("MongoBlogModel", RegisterPostSchema);
 
 // 2.YOL
 const Register = mongoose.model("MongoRegisterModel", RegisterPostSchema);

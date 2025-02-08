@@ -5,6 +5,13 @@ Yazacağımız API ile MongoDB veritabanında blog projemiz için yazma, okuma, 
 Aşağıdaki kodta Exress.js yardımıyla Router  nesnesini farklı HTTP isteklerine cevap verebilecek API ile router yapılar oluşturulacaktır.
 */
 
+/*
+http://localhost:1111/	index44.html açılacak
+http://localhost:1111/register	blog.ejs açılacak
+http://localhost:1111/register/api	JSON formatında blog listesi dönecek
+http://localhost:1111/register/api/:id	Belirli blogu getirecek
+*/
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Import Express (Express:  Node.js için esnek bir web uygulama çatısını inşa eder)
 // Bu modüllerle beraber HTTP istekleri(request) işleyecek ve istemciye(server) yanıt dönecektir.
@@ -84,28 +91,28 @@ router.get("/", async (request, response) => {
         const find = await MongooseRegisterModelApi.find();
 
         // Tarihi Bizim istediğimiz şekilde yazalım.
-        // const formattedDateTurkish = await Promise.all(find.map(async (temp) => {
-        //     // Görüntüleme sayısını artırma
-        //     await temp.incrementViews();
+        const formattedDateTurkish = await Promise.all(find.map(async (temp) => {
+            // Görüntüleme sayısını artırma
+            await temp.incrementViews();
 
-        //     return {
-        //         ...temp._doc, // Tüm blog verilerini kopyala
-        //         dateInformation: new Date(temp.createdAt).toLocaleString("tr-TR", {
-        //             year: "numeric", month: "long", day: "numeric", year: "numeric", hour: "2-digit", second: "2-digit",
-        //         }), //end createdAt
-        //     }; //end return
-        // })); //end formattedDateTurkish
+            return {
+                ...temp._doc, // Tüm blog verilerini kopyala
+                dateInformation: new Date(temp.createdAt).toLocaleString("tr-TR", {
+                    year: "numeric", month: "long", day: "numeric", year: "numeric", hour: "2-digit", second: "2-digit",
+                }), //end createdAt
+            }; //end return
+        })); //end formattedDateTurkish
 
         // Her blog sayfasına bakıldıkça sayacçı 1 artır
         // const viewCounter = await Promise.all(
-        //   find.map(async (blog) => {
-        //     await blog.incrementViews(); // Görüntüleme sayısını artır
-        //     return blog;
-        //   }) // end map
+        //     find.map(async (blog) => {
+        //         await blog.incrementViews(); // Görüntüleme sayısını artır
+        //         return blog;
+        //     }) // end map
         // ); //end viewCounter
-        // Dönüş değeri
+        // // Dönüş değeri
 
-        // response.status(200).json(formattedDateTurkish);
+        response.status(200).json(formattedDateTurkish);
 
         // Listeleme başarılı
         console.log("Listeleme Başarılı");

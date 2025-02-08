@@ -95,9 +95,9 @@ $(document).ready(function () {
     };
 
     // Register listesini getir
-    const fetchBlogList = () => {
+    const fetchRegisterList = () => {
         $.ajax({
-            url: "/register/api",
+            url: "/blog/register",
             method: "GET",
             success: function (data) {
                 const $tbody = $("#register-table tbody").empty();
@@ -144,22 +144,22 @@ $(document).ready(function () {
 
         if (isUpdating && updateId) {
             $.ajax({
-                url: `/register/api/${updateId}`,
+                url: `/blog/register/${updateId}`,
                 method: "PUT",
                 data: registerData,
                 success: function () {
-                    fetchBlogList();
+                    fetchRegisterList();
                     resetForm();
                 },
                 error: handleError
             });
         } else {
             $.ajax({
-                url: "/register/api",
+                url: "/blog/register",
                 method: "POST",
                 data: registerData,
                 success: function () {
-                    fetchBlogList();
+                    fetchRegisterList();
                     resetForm();
                 },
                 error: handleError
@@ -188,14 +188,14 @@ $(document).ready(function () {
         if (!confirm(`${id} nolu Kullanıcıyı'u Silmek İstiyor musunuz?`)) return;
 
         $.ajax({
-            url: `/register/api/${id}`,
+            url: `/blog/register/${id}`,
             method: "DELETE",
-            success: fetchBlogList,
+            success: fetchRegisterList,
             error: handleError
         });
     });
 
     // Sayfa yüklendiğinde register listesini getir
-    fetchBlogList();
+    fetchRegisterList();
     updateCharCount(); // Başlangıçta harf sayacını güncelle
 });
