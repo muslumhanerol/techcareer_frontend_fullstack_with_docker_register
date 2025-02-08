@@ -39,7 +39,6 @@ EJS(Embedded JavaScript  bunu node.js kullandığımızda mongodb, api gibi veri
   <!-- <form id="blog-form"> -->
   <!-- CSRF (Cross-Site Request Forgery):  action,POST için eklendi -->
   <!-- blog için express router(yönlendirmesini yapacağım bunun için server.ts gelen verilerden kullanacağım) -->
-
   <form action="/blog" method="POST" id="blog-form">
     <!-- Dikkat: Eğer bunu yazmazsanız hata alırsınız. CSRF (Cross-Site Request Forgery) -->
     <input type="hidden" name="_csrf" id="_csrf" value="<%= csrfToken %>" />
@@ -57,8 +56,6 @@ EJS(Embedded JavaScript  bunu node.js kullandığımızda mongodb, api gibi veri
       <!-- required kaldırdım -->
       <textarea class="form-control" name="content" id="content" placeholder="blog içeriği" rows="5"></textarea>
     </div>
-    <small id="char-count" class="text-success">Kalan Harf Sayısı: 2000</small>
-
 
     <!-- BLOG AUTHOR -->
     <div class="form-group mb-3">

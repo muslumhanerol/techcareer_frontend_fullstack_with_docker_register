@@ -3,15 +3,10 @@ EJS(Embedded JavaScript  bunu node.js kullandığımızda mongodb, api gibi veri
 -->
 
 <!DOCTYPE html>
-<html lang="en"><!--
-EJS(Embedded JavaScript  bunu node.js kullandığımızda mongodb, api gibi verileri html içinde göstermek)
--->
-
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <title>😂😂 Register.ejs </title>
+  <title>😂😂 Blog.ejs </title>
   <!-- for language  -->
   <meta charset="utf-8" />
 
@@ -28,7 +23,7 @@ EJS(Embedded JavaScript  bunu node.js kullandığımızda mongodb, api gibi veri
     crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- External css -->
-  <!-- NOT: `/css/register.css` için  public dizininde olması gerekiyor -->
+  <!-- NOT: `/css/blog.css` için  public dizininde olması gerekiyor -->
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 
@@ -40,50 +35,47 @@ EJS(Embedded JavaScript  bunu node.js kullandığımızda mongodb, api gibi veri
     <%= csrfToken %>
   </p>
 
-  <!-- Register Form -->
-  <!-- <form id="register-form"> -->
+  <!-- Blog Form -->
+  <!-- <form id="blog-form"> -->
   <!-- CSRF (Cross-Site Request Forgery):  action,POST için eklendi -->
-  <!-- register için express router(yönlendirmesini yapacağım bunun için server.ts gelen verilerden kullanacağım) -->
-
-  <form action="/register" method="POST" id="register-form">
+  <!-- blog için express router(yönlendirmesini yapacağım bunun için server.ts gelen verilerden kullanacağım) -->
+  <form action="/register" method="POST" id="blog-register-form">
     <!-- Dikkat: Eğer bunu yazmazsanız hata alırsınız. CSRF (Cross-Site Request Forgery) -->
     <input type="hidden" name="_csrf" id="_csrf" value="<%= csrfToken %>" />
 
-    <!-- REGISTER USERNAME -->
+    <!-- USERNAME -->
     <div class="form-group mb-3">
       <span for="username">User Name</span>
       <!-- required kaldırdım -->
-      <input type="text" id="username" name="username" class="form-control" placeholder="Enter User Name" autofocus />
+      <input type="text" id="username" name="username" class="form-control" placeholder="username" autofocus />
     </div>
 
-    <!-- REGISTER PASSWORD -->
+    <!-- PASSWORD -->
     <div class="form-group mb-3">
-      <div class="form-group mb-3">
-        <span for="password">Password</span>
-        <!-- required kaldırdım -->
-        <input type="text" id="password" name="password" class="form-control" placeholder="Enter Password" />
-      </div>
+      <span for="password" class="form-label">Password</span>
+      <!-- required kaldırdım -->
+      <input type="text" id="password" name="password" class="form-control" placeholder="password" autofocus />
+    </div>
+
+    <!-- EMAIL -->
+    <div class="form-group mb-3">
+      <span for="email" class="form-label">Email</span>
+      <!-- required kaldırdım -->
+      <input type="text" id="email" name="email" class="form-control" placeholder="email" autofocus />
+    </div>
 
 
-      <!-- REGISTER EMAIL -->
-      <div class="form-group mb-3">
-        <span for="email">Email</span>
-        <!-- required kaldırdım -->
-        <input type="text" id="email" name="email" class="form-control" placeholder="Enter Email" />
-      </div>
-
-
-      <!-- BLOG BUTTON -->
-      <div class="form-group mb-3">
-        <input type="reset" value="Temizle" class="btn btn-danger" />
-        <button type="submit" class="btn btn-primary">Gönder</button>
-      </div>
+    <!-- BLOG BUTTON -->
+    <div class="form-group mb-3">
+      <input type="reset" value="Temizle" class="btn btn-danger" />
+      <button type="submit" class="btn btn-primary">Gönder</button>
+    </div>
   </form>
 
   <hr />
-  <h2 class="text-primary">Register</h2>
+  <h2 class="text-primary">Blog</h2>
   <!-- table.table.table-hover.table-striped>thead>tr>(th{id})*5 -->
-  <table id="register-table" class="table table-hover table-striped">
+  <table id="blog-register-table" class="table table-hover table-striped">
     <!-- THEAD -->
     <thead>
       <tr>
@@ -91,6 +83,10 @@ EJS(Embedded JavaScript  bunu node.js kullandığımızda mongodb, api gibi veri
         <th class="text-uppercase">username</th>
         <th class="text-uppercase">password</th>
         <th class="text-uppercase">email</th>
+        <th class="text-uppercase">views</th>
+        <th class="text-uppercase">status</th>
+        <th class="text-uppercase">created date</th>
+        <th class="text-uppercase">Actions</th>
       </tr>
     </thead>
 
@@ -116,3 +112,5 @@ EJS(Embedded JavaScript  bunu node.js kullandığımızda mongodb, api gibi veri
   <!-- NOT: `/public/js/styles.js` için  public dizininde olması gerekiyor -->
   <script src="/js/register.js"></script>
 </body>
+
+</html>

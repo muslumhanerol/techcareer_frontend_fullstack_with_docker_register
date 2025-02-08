@@ -40,6 +40,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
 
+    <!-- External Css -->
+    <link rel="stylesheet" href="./public/css/index.css" />
+
     <!-- Internal Css -->
     <style>
         p,
@@ -47,10 +50,6 @@
             color: black;
         }
     </style>
-
-    <!-- External Css -->
-    <link rel="stylesheet" href="../css/index.css" />
-
 </head>
 
 <body data-bs-spy="scroll" data-bs-target="#navbar_second">
@@ -91,10 +90,10 @@
                 <a href="#" title="Login" class="text-primary me-2 nav-icon">
                     <i class="fa-solid fa-user"></i>
                 </a>
-                <a href="/register" target="_blank" title="Register" class="text-warning me-2 nav-icon">
+                <a href="http://localhost:1111/" target="_blank" title="Register" class="text-warning me-2 nav-icon">
                     <i class="fa-solid fa-user-secret"></i>
                 </a>
-                <a href="/blog" target="_blank" title="Admin" class="text-danger nav-icon">
+                <a href="http://localhost:1111/" target="_blank" title="Admin" class="text-danger nav-icon">
                     <i class="fa-solid fa-user-shield"></i>
                 </a>
             </div>
@@ -140,8 +139,8 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-bs-toggle="dropdown">More</a>
                         <ul class="dropdown-menu animate-dropdown">
-                            <li><a class="dropdown-item" href="/blog">Blog</a></li>
-                            <li><a class="dropdown-item" href="/register">Register</a></li>
+                            <li><a class="dropdown-item" href="#">Action 1</a></li>
+                            <li><a class="dropdown-item" href="#">Action 2</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -280,7 +279,7 @@
                 <!-- card-1 -->
                 <div class="col-md-4 mb-4" id="card_body">
                     <div class="card blog-card">
-                        <img src="./pictures/kart1.webp" alt="" class="card-img-top" />
+                        <img src="pictures/kart1.webp" alt="" class="card-img-top" />
                         <div class="card-body">
                             <h5 class="card-title text-center h1 text-uppercase">
                                 başlık-1
@@ -462,6 +461,31 @@
                             </h5>
                             <p class="card-text line-clamp8">
                                 içerik-8 Lorem ipsum dolor sit amet consectetur adipisicing
+                                elit. Officia dolore culpa alias minima nisi rem quae
+                                necessitatibus, sapiente in ipsam magni ab fugit itaque
+                                obcaecati enim quasi possimus officiis sint? Veniam hic amet
+                                error corrupti vero mollitia necessitatibus voluptass
+                                excepturi. Lorem, ipsum dolor sit amet consectetur adipisicing
+                                elit. Itaque earum quam, delectus eligendi dolores dolore
+                                atque pariatur commodi officia voluptas, quaerat accusamus
+                                accusantium debitis assumenda error! Culpa consectetur
+                                doloribus esse.
+                            </p>
+                            <a href="" class="btn btn-primary">Daha Fazla</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- card-9 -->
+                <div class="col-md-4 mb-4" id="card_body">
+                    <div class="card blog-card">
+                        <img src="pictures/kart3.webp" alt="" class="card-img-top" />
+                        <div class="card-body">
+                            <h5 class="card-title text-center h1 text-uppercase">
+                                başlık-1
+                            </h5>
+                            <p class="card-text line-clamp8">
+                                içerik-9 Lorem ipsum dolor sit amet consectetur adipisicing
                                 elit. Officia dolore culpa alias minima nisi rem quae
                                 necessitatibus, sapiente in ipsam magni ab fugit itaque
                                 obcaecati enim quasi possimus officiis sint? Veniam hic amet
@@ -682,7 +706,7 @@
         crossorigin="anonymous"></script>
 
     <!-- External Js -->
-    <script src="./js/index.js"></script>
+    <script src="./public/js/index.js"></script>
 </body>
 
 </html>

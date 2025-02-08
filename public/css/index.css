@@ -55,8 +55,7 @@ body {
     font-size: 1.2rem;
     line-height: 1.7;
     position: relative;
-    padding-top: 110px
-        /* 50px+60px=110px navbar_first height:50px+ navbar_second height: 60px calc(50+60); */
+    padding-top: 110px /* 50px+60px=110px navbar_first height:50px+ navbar_second height: 60px calc(50+60); */
 }
 
 a {
@@ -129,8 +128,7 @@ img:hover {
     top: 0;
     left: 0;
     width: 100%;
-    height: 50px;
-    /* Navvar first height */
+    height: 50px; /* Navvar first height */
     z-index: 1000;
     padding: 0.8rem 0;
     color: var(--white);
@@ -185,8 +183,8 @@ img:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.05);
 }
@@ -202,8 +200,8 @@ img:hover {
     top: 50px;
     left: 0;
     width: 100%;
-    /* height: 60px; Navbar second height */
-    z-index: 1;
+    height: 60px; /* Navbar second height */
+    z-index: 999;
     background-color: var(--dark);
     transition: top 0.3s ease-in-out;
 }
@@ -220,10 +218,6 @@ img:hover {
     transform: scale(1.05);
 }
 
-.nav-collapse ul {
-    background-color: #1c1c1c;
-}
-
 /* Dropdown Animasyonu */
 .animate-dropdown {
     animation: fadeIn 0.3s ease-in-out;
@@ -236,7 +230,6 @@ img:hover {
         opacity: 0;
         transform: translateY(5px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -268,11 +261,30 @@ img:hover {
     transform: scale(1.05);
 }
 
+/* #### Mobil Uyumluluk #### */
+@media (max-width: 768px) {
+    #navbar_first .container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    #first_left ul,
+    #first_right {
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .nav-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+}
 
 /*############################################################################################################## */
 /* #### Header ############################################################################################## */
 header {
-    background-image: url("../pictures/header.jpg");
+    background-image: url("../../pictures/header.jpg");
     background-size: cover;
     background-position: 50% 50%;
     z-index: -1;
@@ -309,8 +321,8 @@ header {
 #newspaper_p:hover {
     opacity: 0.8;
     transition: 4s all;
-    background-color: var(--blue) !important;
-    color: var(--white) !important;
+    background-color: var(--blue)!important;
+    color: var(--white)!important;
 }
 
 /* blog */
@@ -342,7 +354,6 @@ header {
     #card_body {
         width: 100% !important;
     }
-
 }
 
 /* 768<=X<=1199 */

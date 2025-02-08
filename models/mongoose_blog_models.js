@@ -8,57 +8,57 @@ const mongoose = require("mongoose");
 
 // Schema adından (BlogPostSchema)
 const BlogPostSchema = new mongoose.Schema({
-    // 1.YOL (HEADER)
-    //header: String,
+        // 1.YOL (HEADER)
+        //header: String,
 
-    // 2.YOL (HEADER)
-    header: {
-        type: String,
-        required: [true, " Blog Başlığı için gereklidir"],
-        trim: true,
-        minleght: [5, "Blog başlığı için minumum 5 karakter olmalıdır."],
-        maxleght: [100, "Blog başlığı için maksimum 100 karakter olmalıdır."],
-    },
+        // 2.YOL (HEADER)
+        header: {
+            type: String,
+            required: [true, " Blog Başlığı için gereklidir"],
+            trim: true,
+            minleght: [5, "Blog başlığı için minumum 5 karakter olmalıdır."],
+            maxleght: [100, "Blog başlığı için maksimum 100 karakter olmalıdır."],
+        },
 
-    // CONTENT
-    // content: String,
-    content: {
-        type: String,
-        required: [true, " Blog içeriği için gereklidir"],
-        trim: true,
-        minleght: [5, "Blog başlığı için minumum 5 karakter olmalıdır."],
-    },
+        // CONTENT
+        // content: String,
+        content: {
+            type: String,
+            required: [true, " Blog içeriği için gereklidir"],
+            trim: true,
+            minleght: [5, "Blog başlığı için minumum 5 karakter olmalıdır."],
+        },
 
-    // AUTHOR
-    author: String,
+        // AUTHOR
+        author: String,
 
-    // TAGS (Dizi)
-    // Etiketler (alanı için en az bir etiket zorunluluğu getirildi.)
-    // Tags (Etiketler): Blog gönderilerine etiketler ekleyerek onları kategorize edebilir ve aramalarda bu etiketleri kullanabilirsiniz.
-    tags: {
-        type: [String], validate: function (v) {
-            return Array.isArray(v) && v.length > 0;
-        }, message: "En az bir etiket girmelisiniz",
-    },
+        // TAGS (Dizi)
+        // Etiketler (alanı için en az bir etiket zorunluluğu getirildi.)
+        // Tags (Etiketler): Blog gönderilerine etiketler ekleyerek onları kategorize edebilir ve aramalarda bu etiketleri kullanabilirsiniz.
+        tags: {
+            type: [String], validate: function (v) {
+                return Array.isArray(v) && v.length > 0;
+            }, message: "En az bir etiket girmelisiniz",
+        },
 
-    // DATE
-    dateInformation: {
-        type: String, default: Date.now(),
-    },
+        // DATE
+        dateInformation: {
+            type: String, default: Date.now(),
+        },
 
-    // VIEWS
-    // Blog Görüntüleme (Default: 0)
-    views: {
-        type: Number, default: 0, min: [0, "Blog gösterimi için Negatif değer verilmez"],
-    },
+        // VIEWS
+        // Blog Görüntüleme (Default: 0)
+        views: {
+            type: Number, default: 0, min: [0, "Blog gösterimi için Negatif değer verilmez"],
+        },
 
-    // STATUS
-    // Durum (Proje için bu bir taslak mı yoksa canlı ortam için mi ?)
-    // Enum Durum Alanı: status: Blog gönderisinin durumu "draft" veya "published" olarak belirlenir. Bu, bir gönderinin taslak mı yoksa yayınlanmış mı olduğunu gösterir.
-    status: {
-        type: String, enum: ["draft", "published"], default: "draft",
-    },
-}, //end BlogPostSchema {}
+        // STATUS
+        // Durum (Proje için bu bir taslak mı yoksa canlı ortam için mi ?)
+        // Enum Durum Alanı: status: Blog gönderisinin durumu "draft" veya "published" olarak belirlenir. Bu, bir gönderinin taslak mı yoksa yayınlanmış mı olduğunu gösterir.
+        status: {
+            type: String, enum: ["draft", "published"], default: "draft",
+        },
+    }, //end BlogPostSchema {}
     {
         // Oluşturma ve güncellemem zamanları sisteme eklemek
         // Zaman Bilgileri: timestamps: createdAt ve updatedAt alanları otomatik olarak eklenir ve her işlemde güncellenir.
@@ -84,7 +84,7 @@ BlogPostSchema.pre("save", function (next) {
 // Statik metot - Belirli bir yazara ait tüm blogları bulma
 // Statik Metot: findByAuthor: Belirli bir yazara ait tüm blog gönderilerini bulmak için statik bir metot ekledik. Bu, belirli yazara göre blog filtrelemek için kullanılabilir.
 BlogPostSchema.statics.findByAuthor = function (authorName) {
-    return this.find({ author: authorName });
+    return this.find({author: authorName});
 };
 
 // Instance metodu - Görüntüleme sayısını artırma
@@ -95,7 +95,7 @@ BlogPostSchema.methods.incrementViews = function () {
 };
 
 // Sanal alanların JSON'a dahil edilmesi
-BlogPostSchema.set("toJSON", { virtuals: true });
+BlogPostSchema.set("toJSON", {virtuals: true});
 
 // Module Exports modelName(BlogModel)
 // BlogModel modelini dışa aktarmak

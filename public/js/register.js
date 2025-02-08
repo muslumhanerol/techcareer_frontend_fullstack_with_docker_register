@@ -1,201 +1,158 @@
+// alert("public/js/public.js");
+
+/*
+header: String,
+content: String,
+author: String,
+tags: String,
+*/
+
+// jQuery dosyalar hazırsa başlayabilir
 $(document).ready(function () {
-    let isUpdating = false;
-    let updateId = null;
-    const maxChars = 2000; // Maksimum harf sayısı
-
-    // Hata mesajlarını temizleme fonksiyonu
-    const clearErrors = () => {
-        $(".error-message, .valid-message").remove();
+    // Formu Temizleme Functionu
+    const reset = () => {
+        // Formu temizlemek için
+        $("#blog-register-form")[0].reset();
     };
 
-    // Hata mesajı ekleme fonksiyonu
-    const showError = (element, message) => {
-        $(element).next(".error-message, .valid-message").remove();
-        $(element).after(`<small class="text-danger error-message">${message}</small>`);
-    };
-
-    // Geçerli mesajı ekleme fonksiyonu
-    const showValid = (element, message) => {
-        $(element).next(".error-message, .valid-message").remove();
-        $(element).after(`<small class="text-success valid-message">${message}</small>`);
-    };
-
-    // İçerik harf sınırını kontrol etme fonksiyonu
-    // const updateCharCount = () => {
-    //     const username = $("#username").val();
-    //     const charCount = username.length;
-    //     const remainingChars = maxChars - charCount;
-
-    //     $("#char-count").text(`Kalan Harf Sayısı: ${remainingChars}`);
-
-    //     if (remainingChars < 0) {
-    //         $("#char-count").removeClass("text-success").addClass("text-danger");
-    //         showError("#content", "İçerik 2000 harften fazla olamaz!");
-    //     } else {
-    //         $("#char-count").removeClass("text-danger").addClass("text-success");
-    //         $(".error-message").remove();
-    //     }
-    // };
-
-    // Form doğrulama fonksiyonu
-    const validateForm = () => {
-        clearErrors();
-        let isValid = true;
-        const content = $("#content").val();
-        const charCount = content.length;
-
-        if ($("#username").val().trim() === "") {
-            showError("#username", "User name boş bırakılamaz!");
-            isValid = false;
-        } else {
-            showValid("#username", "User name geçerli.");
-        }
-
-        if ($("#password").val().trim() === "") {
-            showError("#password", "Password boş bırakılamaz!");
-            isValid = false;
-        } else {
-            showValid("#password", "Password geçerli.");
-        }
-
-
-        if ($("#email").val().trim() === "") {
-            showError("#email", "Şifre adı boş bırakılamaz!");
-            isValid = false;
-        } else {
-            showValid("#email", "Şifre adı geçerli.");
-        }
-
-        return isValid;
-    };
-
-    // Kullanıcı içerik alanına yazdıkça harf sayısını güncelle
-    // $("#content").on("input", function () {
-    //     updateCharCount();
-    // });
-
-    // Kullanıcı input'a yazarken hataları kaldır ve geçerli mesaj ekle
-    $("#username, #password, #email").on("input", function () {
-        const field = $(this);
-        if (field.val().trim() === "") {
-            showError(field, "Bu alan boş bırakılamaz!");
-        } else {
-            showValid(field, "Geçerli.");
-        }
-    });
-
-    // Formu sıfırlama fonksiyonu
-    const resetForm = () => {
-        $("#register-form")[0].reset();
-        isUpdating = false;
-        updateId = null;
-        $("#submit-btn").text("Ekle");
-        clearErrors();
-        updateCharCount();
-    };
-
-    // Register listesini getir
-    const fetchRegisterList = () => {
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Blog List
+    function blogList() {
         $.ajax({
-            url: "/blog/register",
-            method: "GET",
-            success: function (data) {
-                const $tbody = $("#register-table tbody").empty();
-                data.forEach(item => {
-                    $tbody.append(`
-                        <tr data-id="${item._id}">
-                            <td>${item._id}</td>
-                            <td>${item.username}</td>
-                            <td>${item.password}</td>
-                            <td>${item.email}</td>                            
-                            <td>
-                                <button class="btn btn-primary edit-btn"><i class="fa-solid fa-wrench"></i></button>
-                                <button class="btn btn-danger delete-btn"><i class="fa-solid fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    `);
-                });
-            },
-            error: handleError
-        });
-    };
+            url: "/register", method: "GET", success: function (data) {
+                // blogList function içerik listesini temizlemek için kullandım.
+                $("#blog-register-table tbody").empty();
 
-    // Hata yönetimi fonksiyonu
-    const handleError = (xhr, status, error) => {
-        console.error("İşlem başarısız:", error);
-        alert("Beklenmeyen bir hata oluştu, lütfen tekrar deneyin.");
-    };
+                // forEach
+                data.forEach(function (item) {
+                    $("#blog-register-table tbody").append(`
+                <tr data-id="${item._id}">
+                    <td>${item._id}</td>
+                    <td>${item.username}</td>
+                    <td>${item.password}</td>
+                    <td>${item.email}</td>
+                    <td>${item.views}</td>
+                    <td>${item.status}</td>
+                    <td>${item.dateInformation}</td>
+                    <td>
+                        <button class="btn btn-primary edit-btn"><i class="fa-solid fa-wrench"></i></button>
+                        <button class="btn btn-danger delete-btn"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+                `); //end append
+                }); //end for each item
+            }, //end success
+        }); //end ajax
+    } //end blogList
 
-    // Blog ekleme/güncelleme işlemi
-    $("#register-form").on("submit", function (event) {
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Liste Function çağırmak
+    blogList();
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // blog Ekleme
+    $("#blog-register-form").on("submit", function (event) {
+        // Browser'a otomatik olarak herhangi bir veri göndermesini kısıtkadım.
+        // DİKKATTTTT : Bunu kapatmazsam csrf çalışmıyordu
         event.preventDefault();
 
-        // Form doğrulama
-        if (!validateForm()) {
-            return;
-        }
-
-        const registerData = {
+        // Blog Form'da verileri almak için
+        const blogDataCreate = {
+            // Blog Form'da verileri almak için
             username: $("#username").val(),
             password: $("#password").val(),
             email: $("#email").val(),
-            _csrf: $("input[name='_csrf']").val()
+            _csrf: $("input[name='_csrf']").val(), // CSRF token'ı AJAX isteğine dahil ediyoruz
         };
 
-        if (isUpdating && updateId) {
-            $.ajax({
-                url: `/blog/register/${updateId}`,
-                method: "PUT",
-                data: registerData,
-                success: function () {
-                    fetchRegisterList();
-                    resetForm();
-                },
-                error: handleError
-            });
-        } else {
-            $.ajax({
-                url: "/blog/register",
-                method: "POST",
-                data: registerData,
-                success: function () {
-                    fetchRegisterList();
-                    resetForm();
-                },
-                error: handleError
-            });
-        }
-    });
+        console.warn("sonuç:" + blogDataCreate._csrf); // csrf ekle
 
-    // Blog güncelleme işlemi
-    $("#register-table tbody").on("click", ".edit-btn", function () {
+        // Aldığım verileri kaydetmek (AJAX)
+        $.ajax({
+            url: "/register", method: "POST", data: blogDataCreate, success: function (data) {
+                // Ekledikten sonraki işlem için listeyi tazele
+                blogList();
+                // Formu temizlemek için
+                // 1.YOL
+                $("#blog-register-form")[0].reset();
+                // 2.YOL
+                //reset()
+            }, //end success
+            error: function (xhr, status, error) {
+                console.error("Blog Ekleme işlemi başarısız:", error); // Hata mesajını göster
+            },
+        }); //end submit ajax
+    }); // end Blog Add submit
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Blog Güncelleme
+    $("#blog-register-table tbody").on("click", ".edit-btn", function () {
+        //alert("güncelleme");
         const row = $(this).closest("tr");
         const id = row.data("id");
 
-        $("#username").val(row.find("td:eq(1)").text());
-        $("#password").val(row.find("td:eq(2)").text());
-        $("#email").val(row.find("td:eq(3)").text());
+        // Onay Mesajı
+        const confirmation = confirm(`${id} nolu Blog'u Güncellemek İstiyor musunuz ?`);
 
-        isUpdating = true;
-        updateId = id;
-        $("#submit-btn").text("Güncelle");
-    });
+        // Eğer onayımızı evetse
+        if (confirmation) {
+            const username = row.find("td:eq(1)").text(); // header ikinci sütunda
+            const password = row.find("td:eq(2)").text(); // content üçüncü sütunda
+            const email = row.find("td:eq(3)").text(); // author dördüncü sütunda
 
-    // Blog silme işlemi
-    $("#register-table tbody").on("click", ".delete-btn", function () {
+            $("#username").val(username);
+            $("#password").val(password);
+            $("#email").val(email);
+
+            $("#blog-register-form")
+                .off("submit")
+                .on("submit", function (event) {
+                    event.preventDefault();
+                    const blogData = {
+                        username: $("#username").val(),
+                        password: $("#password").val(),
+                        email: $("#email").val(),
+                    };
+
+                    $.ajax({
+                        url: `/register/${id}`, method: "PUT", data: blogData, success: function () {
+                            blogList();
+                            $("#blog-register-form")[0].reset();
+                        }, error: function (xhr, status, error) {
+                            console.log("Güncelleme işlemi başarısız:", error);
+                        },
+                    }); //end put Ajax
+                }); //end submit
+        } else {
+            console.error(`${id} nolu Blog silinmedi`);
+        } //end else
+    }); //end Güncelleme
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Blog Silme
+    // confirm
+    $("#blog-register-table tbody").on("click", ".delete-btn", function () {
+        //alert("silme");
+
+        // İlgili satırdaki id almak için
         const id = $(this).closest("tr").data("id");
 
-        if (!confirm(`${id} nolu Kullanıcıyı'u Silmek İstiyor musunuz?`)) return;
+        // Onay Mesajı
+        const confirmation = confirm(`${id} nolu Blog'u Silmek İstiyor musunuz ?`);
 
-        $.ajax({
-            url: `/blog/register/${id}`,
-            method: "DELETE",
-            success: fetchRegisterList,
-            error: handleError
-        });
-    });
-
-    // Sayfa yüklendiğinde register listesini getir
-    fetchRegisterList();
-    updateCharCount(); // Başlangıçta harf sayacını güncelle
-});
+        // Eğer onayımızı evetse
+        if (confirmation) {
+            // Silme (Ajax)
+            $.ajax({
+                url: `/register/${id}`, method: "DELETE", success: function () {
+                    // Silme işleminden sonrası için listeyi tazele
+                    blogList();
+                }, error: function (xhr, status, error) {
+                    console.log("Silme işlemi başarısız:", error);
+                },
+            });
+        } else {
+            console.error(`${id} nolu Blog silinmedi`);
+        }
+    }); //end Silmek
+}); //end Document.Ready

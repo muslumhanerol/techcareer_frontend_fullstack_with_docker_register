@@ -1,14 +1,14 @@
 {
   "name": "2025_techcareer_frontend_fullstack_1",
   "version": "1.0.0",
-  "description": "[GitHub Address](https://github.com/hamitmizrak/2025_techcareer_frontend_fullstack_1.git) [Mongo Database Cloud](https://www.mongodb.com/products/platform/cloud) [Mongo Database Download](https://www.mongodb.com/try/download/community) [Font Awesome](https://fontawesome.com/search?ic=free) [Google Font](https://fonts.google.com/selection/embed) [Bootstrap](https://getbootstrap.com/) [Box Shadow Online](https://cssgenerator.pl/en/box-shadow-generator/) [jQuery](https://jquery.com//) [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install//) ---",
+  "description": "[GitHub Address](https://github.com/hamitmizrak/2025_techcareer_frontend_fullstack_1.git) [Mongo Database Cloud](https://www.mongodb.com/products/platform/cloud) [Font Awesome](https://fontawesome.com/search?ic=free) [Google Font](https://fonts.google.com/selection/embed) [Bootstrap](https://getbootstrap.com/) [Box Shadow Online](https://cssgenerator.pl/en/box-shadow-generator/) [jQuery](https://jquery.com//) [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install//) ---",
   "main": "./dist/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node  ./dist/server.js",
     "server:start": "lite-server",
     "build_watch": "tsc -w --pretty",
-    "nodemon_app_watch": "nodemon --watch src --watch dist ./dist/index.js",
+    "nodemon_app_watch": "nodemon --watch src --watch dist ./dist/server.js",
     "dev:seri": "npm-run-all --serial build_watch nodemon_app_watch",
     "dev:paralel": "concurrently -k \"npm run build_watch\" \"npm run nodemon_app_watch\" \"npm run server:start\""
   },
@@ -39,7 +39,7 @@
     "@types/node": "^22.13.1",
     "concurrently": "^9.1.2",
     "dotenv": "^16.4.7",
-    "eslint": "^9.19.0",
+    "eslint": "^9.20.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.3",
     "lite-server": "^2.6.1",
