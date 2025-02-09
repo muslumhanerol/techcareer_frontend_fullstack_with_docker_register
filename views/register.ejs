@@ -25,10 +25,93 @@ EJS(Embedded JavaScript  bunu node.js kullandığımızda mongodb, api gibi veri
   <!-- External css -->
   <!-- NOT: `/css/blog.css` için  public dizininde olması gerekiyor -->
   <link rel="stylesheet" href="/css/style.css" />
+
+  <style>
+    #navbar_first {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 65px;
+      /* Navvar first height */
+      z-index: 1000;
+      padding: 0.8rem 0;
+      color: var(--white);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid #ddd;
+      background: linear-gradient(#072a4b, #176d85);
+      /* display: none !important ; */
+      display: flex;
+      align-items: center;
+    }
+
+    #navbar_first .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    #navbar_first a {
+      color: var(--white);
+      font-size: 1.3rem;
+      transition: all 0.3s ease-in-out;
+      padding: 0.5rem;
+      border-radius: 50%;
+    }
+
+    #navbar_first a:hover {
+      color: var(--primary);
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+    }
+  </style>
 </head>
 
-<body class="container">
+<body
+  style="background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(121,118,9,0.8015581232492998) 35%, rgba(0,212,255,1) 100%);"
+  class="container">
   <!-- start codes -->
+
+  <nav id="navbar_first" class="d-flex align-items-center ">
+    <div class="container d-flex justify-content-between">
+      <!-- Sol Taraf (İletişim) -->
+      <div id="first_left" class="d-flex ">
+        <ul class="d-flex links mt-3">
+          <li>
+            <a class="text-primary me-3 nav-icon" href="tel:+901112223344">
+              <i class="fa-solid fa-phone-flip"></i>
+            </a>
+          </li>
+          <li>
+            <a class="text-success me-3 nav-icon"
+              href="https://wa.me/901112223344?text=Merhaba%20iletişime%20geçmek%20istiyorum" target="_blank">
+              <i class="fa-brands fa-whatsapp"></i>
+            </a>
+          </li>
+          <li>
+            <a class="text-danger me-3 nav-icon" href="mailto:info@example.com">
+              <i class="fa-solid fa-envelope"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Sağ Taraf (Login/Register/Admin) -->
+      <div id="first_right" class="d-flex">
+        <a href="/" title="Login" class="text-primary me-2 nav-icon">
+          <i class="fa-solid fa-user"></i>
+        </a>
+        <a href="http://localhost:1111/register" target="_blank" title="Register" class="text-warning me-2 nav-icon">
+          <i class="fa-solid fa-user-secret"></i>
+        </a>
+        <a href="http://localhost:1111" target="_blank" title="Admin" class="text-danger nav-icon">
+          <i class="fa-solid fa-user-shield"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
 
   <h1 class="text-center text-uppercase text-primary">Register Sayfası</h1>
   <p>
