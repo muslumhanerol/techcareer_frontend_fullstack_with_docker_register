@@ -211,9 +211,9 @@ Kullanıcı browser üzerinden oturum açtığında ve kimlik doğrulama bilgile
 app.get("/", csrfProtection, (request: any, response: any) => {
   // İstek gövdesinde JSON(Javascript Object Notation) formatında veri göndereceğini belirtir.
   //response.setHeader("Content-Type", "application/json");
-  //response.setHeader("Content-Type", "text/plain"); // name Hamit surnameMızrak
+  //response.setHeader("Content-Type", "text/plain"); // name MuslumHan surnameErol
   response.setHeader("Content-Type", "text/html");
-  //response.setHeader("Content-Type", "application/x-www-form-urlencoded"); // name=Hamit&surname=Mizrak
+  //response.setHeader("Content-Type", "application/x-www-form-urlencoded"); // name=MuslumHan&surname=Erol
 
   // cache-control: Yanıtları hızlı sunmak için ve sunucya gereksiz istekleri azaltmak için
   response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");

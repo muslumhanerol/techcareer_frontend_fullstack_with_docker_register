@@ -144,7 +144,7 @@ docker_mongo_terminal() {
 #        db.posts.insertOne({
 #            header: "İlk Blog Yazım",
 #            content: "Bu benim ilk blog yazımın içeriğidir.",
-#            author: "Hamit Mızrak.",
+#            author: "Muslum Han Erol.",
 #            tags: "java,jsp",
 #        })
         # db.posts.find().pretty(); # Blog yazısını getir

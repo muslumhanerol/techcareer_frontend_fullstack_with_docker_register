@@ -1,5 +1,5 @@
 # Techcareer Frontend Full Stack- Dockerize
-[GitHub Address](https://github.com/hamitmizrak/2025_techcareer_frontend_fullstack_1.git)
+[GitHub Address](https://github.com/muslumhanerol/techcareer_frontend_fullstack_with_docker_register)
 [Mongo Database Cloud](https://www.mongodb.com/products/platform/cloud)
 [Font Awesome](https://fontawesome.com/search?ic=free)
 [Google Font](https://fonts.google.com/selection/embed)
@@ -43,7 +43,7 @@ git branch
 git branch frontend
 git checkout frontend
 
-git clone https://github.com/hamitmizrak/2025_techcareer_frontend_fullstack_1.git
+git clone https://github.com/muslumhanerol/techcareer_frontend_fullstack_with_docker_register
 ```
 ---
 
@@ -157,7 +157,7 @@ entry point: index.js
 test command: start
 git repository: https://github.com/hamitmizrak/2025_techcareer_frontend_fullstack_1.git
 keywords: Html5,css3,bootstrap5, js, es, ejs, nodejs, nodemon, jquery, express
-author: Yüksek Bilgisayar Mühendisi Hamit Mızrak
+author: Frontend Developer Müslüm Han Erol
 license: ISC
 Is this OK? yes
 ```
@@ -199,7 +199,7 @@ Default
     "dev:paralel": "concurrently -k \"npm run build_watch\" \"npm run nodemon_app_watch\" \"npm run server:start\""
   },
   "keywords": [],
-  "author": "MSc Computer Engineer Hamit Mızrak",
+  "author": "Frontend Developer Müslüm Han Erol",
   "license": "ISC",
   
   "dependencies": {
@@ -671,7 +671,7 @@ use blogDB  # blogDB adında bir veritabanı oluştur ve ona geç
 db.posts.insertOne({
     header: "İlk Blog Yazım",
     content: "Bu benim ilk blog yazımın içeriğidir.",
-    author: "Hamit Mızrak.",
+    author: "Muslum Han Erol.",
     tags: "java,jsp",
 })
 ```
@@ -955,7 +955,7 @@ const swaggerOptions = {
     info: {
       title: "Blog API",
       description:
-        "Blog API yönetimi için dökümantasyon Author: Yüksek Bilgisayar Mühendisi Hamit Mızrak",
+        "Blog API yönetimi için dökümantasyon Author: Frontend Developer Müslüm Han Erol Mızrak",
         version: "1.0.0",
       contact: {
         name: "Developer",
@@ -1047,7 +1047,7 @@ POST
  *               example: "Bu blog yazısının içeriği güncellenmiştir."
  *             author:
  *               type: string
- *               example: "Hamit Mızrak"
+ *               example: "Muslum Han Erol"
  *             tags:
  *               type: string
  *               example: "nodejs, mongodb, update"
